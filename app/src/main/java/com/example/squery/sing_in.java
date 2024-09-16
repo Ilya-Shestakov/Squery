@@ -1,11 +1,13 @@
 package com.example.squery;
 
-import static com.google.firebase.auth.FirebaseAuth.getInstance;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -20,11 +22,9 @@ import java.util.Objects;
 
 public class sing_in extends AppCompatActivity {
 
-    //FIREBASE
-    public DatabaseReference refUser;
-    public String firebaseUserID = "";
-
-    Button btn_sing_in;
+    private FirebaseAuth mAuth;
+    private DatabaseReference refUser;
+    private String firebaseUserID = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,22 +32,15 @@ public class sing_in extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_sing_in);
 
-
-        btn_sing_in = findViewById(R.id.btn_sing_in);
-
-        btn_sing_in.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                registerUser();
-            }
-        });
-
     }
 
-    public void registerUser() {
-        String edit_email = findViewById(R.id.edit_email).toString();
-        String edit_login_name = findViewById(R.id.edit_login_name).toString();
-        String edit_pass = findViewById(R.id.edit_pass).toString();
+    public void sing_in_register(View view) {
+
+        mAuth = FirebaseAuth.getInstance();
+
+        EditText edit_email = findViewById(R.id.edit_email);
+        EditText edit_login_name = findViewById(R.id.edit_login_name);
+        EditText edit_pass = findViewById(R.id.edit_pass);
 
         if (edit_login_name.equals("")) {
             Toast.makeText(this, "Enter the name", Toast.LENGTH_SHORT).show();
@@ -56,20 +49,19 @@ public class sing_in extends AppCompatActivity {
         } else if (edit_pass.equals("")) {
             Toast.makeText(this, "Enter the password", Toast.LENGTH_SHORT).show();
         } else {
-            FirebaseAuth mAuth = getInstance();
-
-            mAuth.createUserWithEmailAndPassword(edit_login_name, edit_pass)
+            mAuth.createUserWithEmailAndPassword(edit_email.getText().toString(), edit_pass.getText().toString())
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
-                            String firebaseUserID = Objects.requireNonNull(mAuth.getCurrentUser()).getUid();
-                            DatabaseReference refUser;
+                            firebaseUserID = mAuth.getCurrentUser().getUid();
                             refUser = FirebaseDatabase.getInstance().getReference().child("Users").child(firebaseUserID);
 
                             HashMap<String, Object> userHashMap = new HashMap<>();
                             userHashMap.put("uid", firebaseUserID);
-                            userHashMap.put("username", edit_login_name);
-                            userHashMap.put("email", edit_email);
-                            userHashMap.put("password", edit_pass);
+                            userHashMap.put("username", edit_login_name.getText().toString());
+                            userHashMap.put("email", edit_email.getText().toString());
+                            userHashMap.put("password", edit_pass.getText().toString());
+
+                            Toast.makeText(this, "Completed!", Toast.LENGTH_SHORT).show();
 
                             refUser.updateChildren(userHashMap)
                                     .addOnCompleteListener(task1 -> {
@@ -79,11 +71,22 @@ public class sing_in extends AppCompatActivity {
                                             finish();
                                         }
                                     });
+
                         } else {
                             Toast.makeText(this, Objects.requireNonNull(task.getException()).toString(), Toast.LENGTH_LONG).show();
                         }
                     });
         }
+
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+        finish();
+
+    }
 }
