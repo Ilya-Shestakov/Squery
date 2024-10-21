@@ -27,7 +27,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void sing_up(View view) {
+
         Toast.makeText(this,"kek", Toast.LENGTH_SHORT).show();
+
+        Intent intent = new Intent(this, sing_up.class);
+        startActivity(intent);
+        finish();
+
     }
 
 }

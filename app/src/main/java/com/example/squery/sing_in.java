@@ -25,6 +25,7 @@ public class sing_in extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private DatabaseReference refUser;
     private String firebaseUserID = "";
+    private String firebaseUserName = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,13 +39,11 @@ public class sing_in extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
+        EditText edit_username = findViewById(R.id.edit_username);
         EditText edit_email = findViewById(R.id.edit_email);
-        EditText edit_login_name = findViewById(R.id.edit_login_name);
         EditText edit_pass = findViewById(R.id.edit_pass);
 
-        if (edit_login_name.equals("")) {
-            Toast.makeText(this, "Enter the name", Toast.LENGTH_SHORT).show();
-        } else if (edit_email.equals("")) {
+        if (edit_email.equals("")) {
             Toast.makeText(this, "Enter the email", Toast.LENGTH_SHORT).show();
         } else if (edit_pass.equals("")) {
             Toast.makeText(this, "Enter the password", Toast.LENGTH_SHORT).show();
@@ -53,25 +52,32 @@ public class sing_in extends AppCompatActivity {
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
                             firebaseUserID = mAuth.getCurrentUser().getUid();
-                            refUser = FirebaseDatabase.getInstance().getReference().child("Users").child(firebaseUserID);
+//                            firebaseUserName = mAuth.getCurrentUser().getDisplayName();
+
+                            firebaseUserName = edit_username.getText().toString();
+
+                            refUser = FirebaseDatabase.getInstance().getReference().child("Users").child(firebaseUserName);
 
                             HashMap<String, Object> userHashMap = new HashMap<>();
-                            userHashMap.put("uid", firebaseUserID);
-                            userHashMap.put("username", edit_login_name.getText().toString());
+//                            userHashMap.put("uid", firebaseUserID);
+                            userHashMap.put("username", firebaseUserName);
                             userHashMap.put("email", edit_email.getText().toString());
                             userHashMap.put("password", edit_pass.getText().toString());
 
                             Toast.makeText(this, "Completed!", Toast.LENGTH_SHORT).show();
 
+                            Intent intent = new Intent(this, MainActivity.class);
+                            startActivity(intent);
+                            finish();
+
                             refUser.updateChildren(userHashMap)
                                     .addOnCompleteListener(task1 -> {
                                         if (task1.isSuccessful()) {
-                                            Intent intent = new Intent(this, MainActivity.class);
-                                            startActivity(intent);
+                                            Intent intent1 = new Intent(this, MainActivity.class);
+                                            startActivity(intent1);
                                             finish();
                                         }
                                     });
-
                         } else {
                             Toast.makeText(this, Objects.requireNonNull(task.getException()).toString(), Toast.LENGTH_LONG).show();
                         }
