@@ -27,6 +27,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -43,7 +44,6 @@ public class Chats_list extends AppCompatActivity {
     ArrayList<String> chats = new ArrayList<>();
 
     public Dialog createChat, welcomeChat;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +75,25 @@ public class Chats_list extends AppCompatActivity {
 //                }
             }
         });
+
+
+
+
+
+
+
+
+
+
+
+          /*-----------------------------------*/
+         /*--------------METHODS--------------*/
+        /*-----------------------------------*/
+
+
+
+
+
 
         //                                                              UPDATE  CHAT LIST
 
@@ -141,6 +160,7 @@ public class Chats_list extends AppCompatActivity {
         });
     }
 
+
     //                                                          ENTRY TO CHAT
 
 
@@ -160,13 +180,87 @@ public class Chats_list extends AppCompatActivity {
 
         titleWelcomeChat.setText(chatname);
 
+
+
+//                                                              CHECK PASS
+
+
+
+
+        final String[] retPass = new String[1];
+
+        // Получаем ссылку на базу данных Firebase
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
+
+//        // Ссылка на подкаталог Chat в каталоге Passwords
+
+        DatabaseReference passRef = databaseReference.child("Passwords").child(titleWelcomeChat.getText().toString());
+
+//        // Добавляем слушатель для чтения данных
+        passRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // Проверяем, существует ли элемент
+                if (dataSnapshot.exists()) {
+
+                    // Проходим по всем дочерним элементам
+                    for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
+                        // Получаем ключ элемента
+                        String key = childSnapshot.getKey();
+
+                        // Получаем значение элемента
+                        String chatData = childSnapshot.getValue(String.class);
+
+                        // Обработка данных
+
+                        assert key != null;
+
+                        String chatDataPass = dataSnapshot.child(key).getValue(String.class);
+
+                        retPass[0] = chatDataPass;
+
+                        // Используйте chatData и key в вашем приложении
+                    }
+
+                    //                    String key = childSnapshot.getKey();
+                    //
+                    //                    String chatData = dataSnapshot.child("-O9zPtyfbIRC8muiu86h").getValue(String.class);
+                    //                    // Обработка данных
+
+                    //                    Toast.makeText(Chats_list.this, chatData, Toast.LENGTH_SHORT).show();
+
+                    //                    // Используйте chatData в вашем приложении
+
+                } else {
+                    // Если элемент не найден
+                    Toast.makeText(Chats_list.this, "Data bot found", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Toast.makeText(Chats_list.this, "Error reading data", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
+
+
+
+
+
+
+
+
         btn_welcome_chat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (editTextCheckPass.getText().toString().equals("12345")){
+                if (editTextCheckPass.getText().toString().equals(retPass[0].toString())){
+//                    Toast.makeText(Chats_list.this, chatname, Toast.LENGTH_SHORT).show();
                     welcomeChatBeforeCheck(chatname);
                 } else {
-                    Toast.makeText(Chats_list.this, "Incorrect password", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Chats_list.this, "Incorrect Pass", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(Chats_list.this, "Incorrect password", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -174,13 +268,6 @@ public class Chats_list extends AppCompatActivity {
         btn_delete_chat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-
-
-
-                // Получаем ссылку на каталог chat1
-                //DatabaseReference chatRef = FirebaseDatabase.getInstance().getReference("Chats");
-
 
                 // Удаляем элемент с ключом
                 myRefChats.child(myRefChats.child(titleWelcomeChat.toString()).getKey()).removeValue();
@@ -194,6 +281,8 @@ public class Chats_list extends AppCompatActivity {
 
     }
 
+
+
     private void welcomeChatBeforeCheck(String chatname) {
 
         Intent intent = new Intent(this, Chat1.class);
@@ -202,8 +291,6 @@ public class Chats_list extends AppCompatActivity {
         finish();
 
     }
-
-
 
 
 
@@ -226,7 +313,10 @@ public class Chats_list extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
+                DatabaseReference myRefPasswords = database.getReference("Passwords/"+editTextChatName.getText().toString());
+
                 myRefChats.push().setValue(editTextChatName.getText().toString());
+                myRefPasswords.push().setValue(editTextChatPass.getText().toString());
 
                 createChat.cancel();
             }
