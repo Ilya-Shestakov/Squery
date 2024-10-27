@@ -17,7 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="70dp"
 
-        android:background="@color/white"
+        android:background="@color/color_back_pa"
 
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="30dp"
@@ -36,6 +36,9 @@
             android:textColor="@color/black"
             android:fontFamily="@font/kavoon"
             android:textSize="35dp"
+
+            android:background="@color/color_back_pa"
+
             tools:ignore="HardcodedText,RtlSymmetry,SpUsage" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -47,11 +50,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
 
-        android:background="@drawable/back_blok"
+        android:background="@color/color_back_pa"
 
         android:elevation="10dp"
 
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="200dp"
 
         app:layout_constraintTop_toBottomOf="@+id/title_with_sing_up"
 
@@ -76,6 +79,8 @@
             android:textColorHint="@color/black"
             android:textSize="25dp"
             android:paddingStart="20dp"
+
+            android:backgroundTint="@color/outLine"
 
             />
 
@@ -103,28 +108,13 @@
             android:paddingStart="20dp"
 
             android:layout_marginTop="10dp"
+
+            android:backgroundTint="@color/outLine"
             />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
 
-        android:id="@+id/shadow_for_sing_up"
-
-        android:layout_width="0dp"
-        android:layout_height="70dp"
-
-        app:layout_constraintStart_toStartOf="@+id/btn_sing_up_of_sing_up"
-        app:layout_constraintEnd_toEndOf="@+id/btn_sing_up_of_sing_up"
-        app:layout_constraintTop_toTopOf="@+id/btn_sing_up_of_sing_up"
-        app:layout_constraintBottom_toBottomOf="@+id/btn_sing_up_of_sing_up"
-        android:layout_marginTop="15dp"
-        android:layout_marginStart="5dp"
-        android:layout_marginEnd="-5dp"
-
-        android:background="@drawable/shadow_for_sing_out_and_in"
-
-        />
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -144,22 +134,25 @@
 
         android:background="@drawable/btn_from_reg_and_log"
 
+        android:elevation="15dp"
+
         >
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
 
-            android:text="Next"
-            android:textColor="@color/black"
-            android:textSize="25sp"
-
             android:gravity="center"
             android:paddingStart="25dp"
             android:paddingEnd="25dp"
 
+            android:text="Next"
+            android:textColor="@color/black"
+            android:textSize="25sp"
+
             android:textStyle="bold"
-            />
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="0dp" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -6,10 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".sing_in"
-
     android:background="@color/background"
     >
-
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/title_with_sing_in"
@@ -17,7 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="70dp"
 
-        android:background="@color/white"
+        android:background="@color/color_back_pa"
 
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="30dp"
@@ -47,7 +45,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
 
-        android:background="@drawable/back_blok"
+        android:background="@color/color_back_pa"
 
         android:elevation="10dp"
 
@@ -78,6 +76,7 @@
             android:paddingStart="20dp"
             android:layout_marginTop="10dp"
 
+            android:backgroundTint="@color/outLine"
             />
 
         <EditText
@@ -98,6 +97,8 @@
             android:paddingStart="20dp"
 
             android:layout_marginTop="10dp"
+
+            android:backgroundTint="@color/outLine"
             />
 
         <EditText
@@ -125,32 +126,11 @@
             android:textSize="25dp"
             android:paddingStart="20dp"
 
+            android:backgroundTint="@color/outLine"
             />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-
-        android:id="@+id/shadow_for_sing_in"
-
-        android:layout_width="0dp"
-        android:layout_height="70dp"
-
-        app:layout_constraintStart_toStartOf="@+id/btn_sing_in"
-        app:layout_constraintEnd_toEndOf="@+id/btn_sing_in"
-        app:layout_constraintTop_toTopOf="@+id/btn_sing_in"
-        app:layout_constraintBottom_toBottomOf="@+id/btn_sing_in"
-
-        android:layout_marginTop="15dp"
-        android:layout_marginStart="5dp"
-        android:layout_marginEnd="-5dp"
-
-        android:background="@drawable/shadow_for_sing_out_and_in"
-
-        />
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -170,6 +150,7 @@
 
         android:background="@drawable/btn_from_reg_and_log"
 
+        android:elevation="15dp"
         >
 
         <TextView

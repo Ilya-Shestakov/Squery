@@ -15,7 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="70dp"
 
-        android:background="@color/white"
+        android:background="@color/btn_log_and_reg_color"
 
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="30dp"
@@ -50,6 +50,24 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:src="@drawable/baseline_add_24"
+                />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/btn_find_chat"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/btn_add_chat"
+            android:layout_marginEnd="20dp"
+            >
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/baseline_search_24"
                 />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

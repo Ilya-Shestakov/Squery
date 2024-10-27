@@ -13,6 +13,7 @@ import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -29,7 +30,7 @@ public class Chat1 extends AppCompatActivity {
 
     TextView username_title_of_chat;
 
-    Button btnSendMess, btnDelAll;
+    ConstraintLayout btnSendMess, btnDelAll;
     EditText editTextMess;
     RecyclerView mMessagesRecycler;
 
@@ -47,7 +48,7 @@ public class Chat1 extends AppCompatActivity {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("ChatsWithMess/" + getIntent().getStringExtra("Chatname"));
 
-//        DatabaseReference myRefChats = database.getReference("Chats/" + getIntent().getStringExtra("Chatname"));
+        DatabaseReference myRefChats = database.getReference("Chats/" + getIntent().getStringExtra("Chatname"));
 
         btnDelAll.setOnClickListener(new View.OnClickListener() {
             @SuppressLint("UnsafeIntentLaunch")
@@ -56,11 +57,12 @@ public class Chat1 extends AppCompatActivity {
 
                 myRef.removeValue();
 
-//                myRefChats.child(username_title_of_chat.toString()).removeValue();
+                //myRefChats.child(username_title_of_chat.toString()).removeValue();
 
 //                Toast.makeText(Chat1.this, myRefChats.toString(), Toast.LENGTH_SHORT).show();
 
-                backPressHand();
+                //backPressHand();
+                recreate();
             }
         });
 
@@ -82,7 +84,7 @@ public class Chat1 extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (!editTextMess.getText().toString().trim().isEmpty()) {
-                    if (editTextMess.getText().toString().length() <= 200) {
+                    if (editTextMess.getText().toString().length() <= 500) {
                         myRef.push().setValue("User 1" + ":  " + editTextMess.getText().toString());
                         editTextMess.setText("");
                     }

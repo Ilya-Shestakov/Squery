@@ -51,6 +51,8 @@ public class Chats_list extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_chats_list);
 
+        welcomeChat = new Dialog(Chats_list.this);
+
         recycler_view_in_chats_list = findViewById(R.id.recycler_view_in_chats_list);
         btn_add_chat = findViewById(R.id.btn_add_chat);
         username_title_of_chats_list = findViewById(R.id.username_title_of_chats_list);
@@ -83,12 +85,10 @@ public class Chats_list extends AppCompatActivity {
 
 
 
-
-
-
           /*-----------------------------------*/
          /*--------------METHODS--------------*/
         /*-----------------------------------*/
+
 
 
 
@@ -165,8 +165,6 @@ public class Chats_list extends AppCompatActivity {
 
 
     private void LetsChat(String chatname, DatabaseReference myRefChats) {
-
-        welcomeChat = new Dialog(Chats_list.this);
 
         welcomeChat.setContentView(R.layout.activity_in_the_chat);
         welcomeChat.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -246,20 +244,14 @@ public class Chats_list extends AppCompatActivity {
 
 
 
-
-
-
-
-
-
         btn_welcome_chat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (editTextCheckPass.getText().toString().equals(retPass[0].toString())){
-//                    Toast.makeText(Chats_list.this, chatname, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Chats_list.this, "Correct Pass: "+retPass[0], Toast.LENGTH_SHORT).show();
                     welcomeChatBeforeCheck(chatname);
                 } else {
-                    Toast.makeText(Chats_list.this, "Incorrect Pass", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Chats_list.this, "Incorrect Pass" + retPass[0], Toast.LENGTH_SHORT).show();
 //                    Toast.makeText(Chats_list.this, "Incorrect password", Toast.LENGTH_SHORT).show();
                 }
             }
