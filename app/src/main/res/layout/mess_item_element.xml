@@ -5,10 +5,11 @@
     android:layout_marginTop="5dp"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@drawable/border_for_mess">
+    android:background="@drawable/edit_texts_back"
+    android:elevation="15dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:background="@color/background"
+        android:background="@color/white"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
@@ -17,14 +18,13 @@
 
         <TextView
             android:id="@+id/Mess1"
-            android:background="@color/background"
+            android:background="@color/white"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="123mess1"
             android:textSize="24dp"
-            android:fontFamily="serif"
+            android:fontFamily="@font/adlam_display"
             android:textColor="@color/black"
-            android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             android:gravity="left"
             />

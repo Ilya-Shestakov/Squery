@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <array name="preloaded_fonts" translatable="false">
+        <item>@font/adlam_display</item>
+        <item>@font/ar_one_sans</item>
         <item>@font/kavoon</item>
     </array>
 </resources>

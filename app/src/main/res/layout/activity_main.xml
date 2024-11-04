@@ -6,7 +6,28 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity"
-    android:background="@color/background">
+    android:background="@color/white"
+    >
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        app:layout_constraintStart_toStartOf="parent"
+
+        android:layout_width="20dp"
+        android:layout_height="match_parent"
+        android:background="@drawable/neon_shadow_act_hor"
+        />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        app:layout_constraintEnd_toEndOf="parent"
+
+        android:layout_width="20dp"
+        android:layout_height="match_parent"
+        android:background="@drawable/neon_shadow_act_hor"
+        android:rotation="180"
+        />
+
+
 
     <ImageView
         android:id="@+id/img_papagey"
@@ -39,105 +60,27 @@
         >
 
         <TextView
-            android:id="@+id/Title"
-
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-
-            android:gravity="center"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:fontFamily="@font/kavoon"
-            android:text="@string/squery_messenger"
-            android:textSize="30sp"
-            android:textColor="@color/text_color"
-            android:textStyle="normal"
-
-            android:shadowColor="@color/black"
-            android:shadowDx="10"
-            android:shadowRadius="5"
-            />
-
-        <TextView
-            android:id="@+id/TitleX2"
-
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-
-            android:gravity="center"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:fontFamily="@font/kavoon"
-            android:text="@string/squery_messenger"
-            android:textSize="30sp"
-            android:textColor="@color/text_color"
-            android:textStyle="normal"
-
-            android:shadowColor="@color/black"
-            android:shadowDx="-10"
-            android:shadowRadius="5"
-
-            />
-
-        <TextView
-            android:id="@+id/TitleX3"
-
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-
-            android:gravity="center"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:fontFamily="@font/kavoon"
-            android:text="@string/squery_messenger"
-            android:textSize="30sp"
-            android:textColor="@color/text_color"
-            android:textStyle="normal"
-
-            android:shadowColor="@color/black"
-            android:shadowDy="10"
-            android:shadowRadius="5"
-            />
-
-        <TextView
-            android:id="@+id/TitleX4"
-
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-
-            android:gravity="center"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:fontFamily="@font/kavoon"
-            android:text="@string/squery_messenger"
-            android:textSize="30sp"
-            android:textColor="@color/text_color"
-            android:textStyle="normal"
-
-            android:shadowColor="@color/black"
-            android:shadowDy="-10"
-            android:shadowRadius="5"
-
-            />
-
-        <TextView
             android:id="@+id/TitleX5"
 
             android:layout_width="match_parent"
             android:layout_height="match_parent"
 
+            android:fontFamily="@font/adlam_display"
             android:gravity="center"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:fontFamily="@font/kavoon"
             android:text="@string/squery_messenger"
+            android:textColor="@color/black"
             android:textSize="30sp"
-            android:textColor="#F2D9C6"
             android:textStyle="normal"
 
-            android:shadowColor="@color/black"
-            android:shadowRadius="25"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
 
+            tools:layout_editor_absoluteY="10dp"
+
+            android:shadowColor="@color/secondColorBlue"
+            android:shadowDy="1"
+            android:shadowDx="1"
+            android:shadowRadius="35"
             />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -145,26 +88,57 @@
 
 
 
+
+
+
+
     <androidx.constraintlayout.widget.ConstraintLayout
 
+        android:layout_width="10dp"
+        android:layout_height="0dp"
+        android:background="@drawable/neon_shadow_act_hor"
+
+        app:layout_constraintEnd_toStartOf="@+id/btn_sing_up"
+        app:layout_constraintTop_toTopOf="@+id/btn_sing_up"
+        app:layout_constraintBottom_toBottomOf="@+id/btn_sing_up"
+
+        android:rotation="180"
+        />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+
+        android:layout_width="10dp"
+        android:layout_height="0dp"
+        android:background="@drawable/neon_shadow_act_hor"
+
+        app:layout_constraintStart_toEndOf="@+id/btn_sing_up"
+        app:layout_constraintTop_toTopOf="@+id/btn_sing_up"
+        app:layout_constraintBottom_toBottomOf="@+id/btn_sing_up"
+        />
+
+
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/btn_sing_up"
         android:onClick="sing_up"
 
-        android:layout_width="wrap_content"
+        android:layout_width="300dp"
         android:layout_height="70dp"
 
         android:layout_gravity="center"
 
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="150dp"
 
-        android:background="@drawable/btn_from_reg_and_log"
+        android:background="@drawable/edit_texts_back"
 
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/btn_sing_in"
         app:layout_constraintTop_toBottomOf="@+id/constr_with_title"
 
         android:elevation="15dp"
+
+
         >
 
         <TextView
@@ -174,6 +148,7 @@
             android:text="ВОЙТИ В АККАУНТ"
             android:textColor="@color/black"
             android:textSize="25dp"
+            android:fontFamily="@font/adlam_display"
 
             android:gravity="center"
             android:paddingStart="25dp"
@@ -186,39 +161,69 @@
 
 
 
+
+
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+
+        android:layout_width="10dp"
+        android:layout_height="0dp"
+        android:background="@drawable/neon_shadow_act_hor"
+
+        app:layout_constraintEnd_toStartOf="@+id/btn_sing_in"
+        app:layout_constraintTop_toTopOf="@+id/btn_sing_in"
+        app:layout_constraintBottom_toBottomOf="@+id/btn_sing_in"
+
+        android:rotation="180"
+        />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+
+        android:layout_width="10dp"
+        android:layout_height="0dp"
+        android:background="@drawable/neon_shadow_act_hor"
+
+        app:layout_constraintStart_toEndOf="@+id/btn_sing_in"
+        app:layout_constraintTop_toTopOf="@+id/btn_sing_in"
+        app:layout_constraintBottom_toBottomOf="@+id/btn_sing_in"
+        />
+
+
+
     <androidx.constraintlayout.widget.ConstraintLayout
 
         android:id="@+id/btn_sing_in"
         android:onClick="sing_in"
 
-        android:layout_width="wrap_content"
+        android:layout_width="250dp"
         android:layout_height="70dp"
 
         android:layout_gravity="center"
 
+        android:background="@drawable/edit_texts_back"
 
-        android:background="@drawable/btn_from_reg_and_log"
-
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/btn_sing_up"
+        app:layout_constraintStart_toStartOf="@+id/btn_sing_up"
         app:layout_constraintTop_toBottomOf="@+id/btn_sing_up"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="80dp"
 
         android:elevation="15dp"
+
+        android:layout_marginTop="50dp"
         >
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
 
-            android:text="РЕГИСТРАЦИЯ"
-            android:textColor="@color/black"
-            android:textSize="25sp"
-
             android:gravity="center"
             android:paddingStart="25dp"
             android:paddingEnd="25dp"
+            android:fontFamily="@font/adlam_display"
+
+            android:text="РЕГИСТРАЦИЯ"
+            android:textColor="@color/black"
+            android:textSize="25sp"
 
             android:textStyle="bold"
             />

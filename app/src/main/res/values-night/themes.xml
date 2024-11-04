@@ -2,6 +2,6 @@
     <!-- Base application theme. -->
     <style name="Base.Theme.Squery" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your dark theme here. -->
-<!--        <item name="colorPrimary">@color/background</item>-->
+        <item name="colorPrimary">@color/background</item>
     </style>
 </resources>

@@ -6,7 +6,7 @@
     android:layout_width="300dp"
     android:layout_height="150dp"
     android:layout_gravity="center"
-    android:background="@drawable/back_for_wind"
+    android:background="@drawable/btn_from_reg_and_log"
     tools:context=".in_the_chat">
 
     <TextView
@@ -14,10 +14,12 @@
 
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/kavoon"
+        android:layout_marginTop="12dp"
+        android:fontFamily="@font/adlam_display"
         android:gravity="center"
         android:text="Chat..."
         android:textColor="@color/black"
+
         android:textSize="25dp"
 
         app:layout_constraintTop_toTopOf="parent"
@@ -29,9 +31,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
 
-        android:background="@drawable/back_block_edit_pass_from_checking"
+        android:background="@drawable/edit_texts_back"
 
-        android:layout_marginHorizontal="1dp"
+        android:layout_marginHorizontal="10dp"
         android:layout_marginTop="10dp"
 
         app:layout_constraintStart_toStartOf="parent"
@@ -54,7 +56,8 @@
             android:hint="Password"
             android:textColor="@color/black"
             android:textSize="20dp"
-            android:fontFamily="@font/kavoon"
+            android:textColorHint="@color/black"
+            android:fontFamily="@font/adlam_display"
 
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -62,8 +65,9 @@
             app:layout_constraintStart_toStartOf="parent"
             android:gravity="center"
 
-            android:backgroundTint="@color/razb_zelt"
+            android:backgroundTint="@color/black"
             />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -74,6 +78,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginEnd="10dp"
+        android:layout_marginTop="10dp"
         >
 
         <ImageView
@@ -91,6 +96,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
         >
 
         <ImageView

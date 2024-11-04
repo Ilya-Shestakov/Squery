@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Chats_list"
-    android:background="@color/background">
+    android:background="@color/white">
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -15,10 +15,12 @@
         android:layout_width="match_parent"
         android:layout_height="70dp"
 
-        android:background="@color/btn_log_and_reg_color"
+        android:background="@color/white"
 
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="30dp"
+
+        android:elevation="15dp"
         >
 
         <TextView
@@ -32,7 +34,7 @@
 
             android:text="Username"
             android:textColor="@color/black"
-            android:fontFamily="@font/kavoon"
+            android:fontFamily="@font/adlam_display"
             android:textSize="25dp"
             tools:ignore="HardcodedText,RtlSymmetry,SpUsage" />
 

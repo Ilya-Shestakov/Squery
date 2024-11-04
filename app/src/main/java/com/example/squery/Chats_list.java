@@ -29,6 +29,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -67,6 +69,13 @@ public class Chats_list extends AppCompatActivity {
 
         DatabaseReference myRefChats = database.getReference("Chats");
 
+
+
+        String Username = getIntent().getStringExtra("Username");
+
+        username_title_of_chats_list.setText(Username);
+
+
         btn_add_chat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -77,23 +86,6 @@ public class Chats_list extends AppCompatActivity {
 //                }
             }
         });
-
-
-
-
-
-
-
-
-          /*-----------------------------------*/
-         /*--------------METHODS--------------*/
-        /*-----------------------------------*/
-
-
-
-
-
-
 
         //                                                              UPDATE  CHAT LIST
 
@@ -147,7 +139,7 @@ public class Chats_list extends AppCompatActivity {
                 if (childView != null) {
                     int position = recycler_view_in_chats_list.getChildAdapterPosition(childView);
                     int itemIndex = dataAdapter.getItemIndex(position);
-                    LetsChat(String.valueOf(dataAdapter.chats.get(itemIndex)), myRefChats);
+                    LetsChat(String.valueOf(dataAdapter.chats.get(itemIndex)), myRefChats, Username);
 //                    Toast.makeText(Chats_list.this, String.valueOf(dataAdapter.chats.get(itemIndex)), Toast.LENGTH_SHORT).show();
                 }
                 return false;
@@ -161,10 +153,32 @@ public class Chats_list extends AppCompatActivity {
     }
 
 
+
+
+
+
+
+
+
+
+
+    /*-----------------------------------*/
+    /*--------------METHODS--------------*/
+    /*-----------------------------------*/
+
+
+
+
+
+
+
+
+
+
     //                                                          ENTRY TO CHAT
 
 
-    private void LetsChat(String chatname, DatabaseReference myRefChats) {
+    private void LetsChat(String chatname, DatabaseReference myRefChats, String username_title_of_chats_list_from_chat) {
 
         welcomeChat.setContentView(R.layout.activity_in_the_chat);
         welcomeChat.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -248,10 +262,11 @@ public class Chats_list extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (editTextCheckPass.getText().toString().equals(retPass[0].toString())){
-                    Toast.makeText(Chats_list.this, "Correct Pass: "+retPass[0], Toast.LENGTH_SHORT).show();
-                    welcomeChatBeforeCheck(chatname);
+//                    Toast.makeText(Chats_list.this, "Correct Pass: "+retPass[0], Toast.LENGTH_SHORT).show();
+
+                    welcomeChatBeforeCheck(chatname, username_title_of_chats_list_from_chat);
                 } else {
-                    Toast.makeText(Chats_list.this, "Incorrect Pass" + retPass[0], Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(Chats_list.this, "Incorrect Pass" + retPass[0], Toast.LENGTH_SHORT).show();
 //                    Toast.makeText(Chats_list.this, "Incorrect password", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -275,10 +290,11 @@ public class Chats_list extends AppCompatActivity {
 
 
 
-    private void welcomeChatBeforeCheck(String chatname) {
+    private void welcomeChatBeforeCheck(String chatname, String username_to_chat) {
 
         Intent intent = new Intent(this, Chat1.class);
         intent.putExtra("Chatname", chatname);
+        intent.putExtra("Username_to_chat", username_to_chat);
         startActivity(intent);
         finish();
 

@@ -19,7 +19,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void sing_in(View view) {
 
-        Toast.makeText(this,"xex", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this,"xex", Toast.LENGTH_SHORT).show();
 
         Intent intent = new Intent(this, sing_in.class);
         startActivity(intent);
@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void sing_up(View view) {
 
-        Toast.makeText(this,"kek", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this,"kek", Toast.LENGTH_SHORT).show();
 
         Intent intent = new Intent(this, sing_up.class);
         startActivity(intent);

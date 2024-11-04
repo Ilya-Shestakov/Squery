@@ -28,7 +28,7 @@ import java.util.Objects;
 
 public class Chat1 extends AppCompatActivity {
 
-    TextView username_title_of_chat;
+    TextView chatname_title_of_chat, username_title_of_chat;
 
     ConstraintLayout btnSendMess, btnDelAll;
     EditText editTextMess;
@@ -42,6 +42,7 @@ public class Chat1 extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_chat1);
 
+        chatname_title_of_chat = findViewById(R.id.chatname_title_of_chat);
         username_title_of_chat = findViewById(R.id.username_title_of_chat);
         btnDelAll = findViewById(R.id.btn_delete_all);
 
@@ -66,9 +67,14 @@ public class Chat1 extends AppCompatActivity {
             }
         });
 
-        String username = getIntent().getStringExtra("Chatname");
+
+        String chatname = getIntent().getStringExtra("Chatname");
+
+        String username = getIntent().getStringExtra("Username_to_chat");
 
         username_title_of_chat.setText(username);
+
+        chatname_title_of_chat.setText(chatname);
 
         btnSendMess = findViewById(R.id.btnSendMess);
         editTextMess = findViewById(R.id.editTextMess);
@@ -85,7 +91,7 @@ public class Chat1 extends AppCompatActivity {
             public void onClick(View view) {
                 if (!editTextMess.getText().toString().trim().isEmpty()) {
                     if (editTextMess.getText().toString().length() <= 500) {
-                        myRef.push().setValue("User 1" + ":  " + editTextMess.getText().toString());
+                        myRef.push().setValue(username + ":  " + editTextMess.getText().toString());
                         editTextMess.setText("");
                     }
                 }
@@ -139,7 +145,10 @@ public class Chat1 extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
 
+        String username = getIntent().getStringExtra("Username_to_chat");
+
         Intent intent1 = new Intent(this, Chats_list.class);
+        intent1.putExtra("Username", username);
         startActivity(intent1);
         finish();
 

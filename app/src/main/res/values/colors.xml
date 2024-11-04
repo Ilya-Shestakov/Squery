@@ -2,10 +2,11 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="background">#97AAB5</color>
+    <color name="background">#7F7F7F</color>
     <color name="text_color">#E6E4E4</color>
     <color name="color_back_pa">#EBE0D5</color>
     <color name="btn_log_and_reg_color">#E4C557</color>
     <color name="razb_zelt">#EBE0B9</color>
     <color name="outLine">#446F68</color>
+    <color name="secondColorBlue">#67EBD6</color>
 </resources>

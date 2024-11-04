@@ -1,6 +1,7 @@
 package com.example.squery;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import android.content.Context;
@@ -60,18 +61,63 @@ public class sing_up extends AppCompatActivity {
             mAuth.signInWithEmailAndPassword(edit_email_sing_up, edit_password_sing_up)
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
-                            Intent intent = new Intent(this, Chats_list.class);
-                            //intent.putExtra("Username", ();
-                            startActivity(intent);
-                            finish();
 
-                            Toast.makeText(this, "Sing up", Toast.LENGTH_LONG).show();
+
+
+
+                            DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
+
+
+                            ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    if (dataSnapshot.exists()) {
+                                        for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
+                                            // Получаем данные о пользователе
+                                            User user = userSnapshot.getValue(User.class);
+
+                                            // Проверяем email
+                                            if (user.getEmail().equals(edit_email_sing_up)) {
+                                                // Нашли пользователя!
+                                                String userId = userSnapshot.getKey(); // Получаем ключ пользователя
+//                                                Log.d("Firebase", "Пользователь найден" + userId);
+
+
+                                                intent(userId);
+
+
+//                                                Toast.makeText(sing_up.this, "User found: " + userId, Toast.LENGTH_SHORT).show();
+
+                                                //  Здесь вы можете использовать userId для дальнейших действий
+                                            }
+                                        }
+                                    } else {
+                                        Toast.makeText(sing_up.this, "User not found", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+                                    Log.w("Firebase", "Ошибка при чтении данных", databaseError.toException());
+                                }
+                            });
+
+
+
+                            //Toast.makeText(this, "Sing up", Toast.LENGTH_LONG).show();
 
                         } else {
                             Toast.makeText(this, task.getException().toString(), Toast.LENGTH_LONG).show();
                         }
                     });
         }
+    }
+
+    public void intent(String putter) {
+        Intent intent = new Intent(this, Chats_list.class);
+        intent.putExtra("Username", putter);
+        startActivity(intent);
+        finish();
     }
 
     @Override
