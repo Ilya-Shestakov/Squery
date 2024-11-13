@@ -13,7 +13,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         app:layout_constraintStart_toStartOf="parent"
 
-        android:layout_width="20dp"
+        android:layout_width="15dp"
         android:layout_height="match_parent"
         android:background="@drawable/neon_shadow_act_hor"
         />
@@ -21,7 +21,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         app:layout_constraintEnd_toEndOf="parent"
 
-        android:layout_width="20dp"
+        android:layout_width="15dp"
         android:layout_height="match_parent"
         android:background="@drawable/neon_shadow_act_hor"
         android:rotation="180"
@@ -94,7 +94,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
 
-        android:layout_width="10dp"
+        android:layout_width="7dp"
         android:layout_height="0dp"
         android:background="@drawable/neon_shadow_act_hor"
 
@@ -107,7 +107,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
 
-        android:layout_width="10dp"
+        android:layout_width="7dp"
         android:layout_height="0dp"
         android:background="@drawable/neon_shadow_act_hor"
 
@@ -138,24 +138,24 @@
 
         android:elevation="15dp"
 
-
-        >
+    >
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
 
-            android:text="ВОЙТИ В АККАУНТ"
-            android:textColor="@color/black"
-            android:textSize="25dp"
             android:fontFamily="@font/adlam_display"
-
             android:gravity="center"
             android:paddingStart="25dp"
             android:paddingEnd="25dp"
 
+            android:text="ВОЙТИ В АККАУНТ"
+            android:textColor="@color/black"
+            android:textSize="25dp"
+
             android:textStyle="bold"
-            />
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="0dp" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -167,7 +167,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
 
-        android:layout_width="10dp"
+        android:layout_width="7dp"
         android:layout_height="0dp"
         android:background="@drawable/neon_shadow_act_hor"
 
@@ -180,7 +180,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
 
-        android:layout_width="10dp"
+        android:layout_width="7dp"
         android:layout_height="0dp"
         android:background="@drawable/neon_shadow_act_hor"
 

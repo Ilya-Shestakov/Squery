@@ -321,12 +321,14 @@ public class Chats_list extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                DatabaseReference myRefPasswords = database.getReference("Passwords/"+editTextChatName.getText().toString());
+//                DatabaseReference myRefPasswords = database.getReference("Passwords/"+editTextChatName.getText().toString());
+//
+//                myRefChats.push().setValue(editTextChatName.getText().toString());
+//                myRefPasswords.push().setValue(editTextChatPass.getText().toString());
+//
+//                createChat.cancel();
 
-                myRefChats.push().setValue(editTextChatName.getText().toString());
-                myRefPasswords.push().setValue(editTextChatPass.getText().toString());
-
-                createChat.cancel();
+                Toast.makeText(Chats_list.this, "Developers working for this ...", Toast.LENGTH_SHORT).show();
             }
         });
 
