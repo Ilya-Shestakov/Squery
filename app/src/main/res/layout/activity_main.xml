@@ -35,7 +35,7 @@
         android:layout_width="130dp"
         android:layout_height="100dp"
 
-        android:src="@drawable/papageysmall"
+        android:src="@drawable/papagey_better"
 
         android:layout_gravity="center"
 

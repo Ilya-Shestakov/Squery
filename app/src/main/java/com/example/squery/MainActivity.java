@@ -39,29 +39,10 @@ public class MainActivity extends AppCompatActivity {
         //Stoper
         //tracker.stopTracking();
 
-
         tracker.startTracking("чат 1", new MessageListenerService.ChatUpdateListener() {
             @Override
             public void onUpdate(String chatId) {
                 sendMessFirstChat();
-            }
-        });
-        tracker.startTracking("чат 2", new MessageListenerService.ChatUpdateListener() {
-            @Override
-            public void onUpdate(String chatId) {
-                sendMessSecondChat();
-            }
-        });
-        tracker.startTracking("чат 3", new MessageListenerService.ChatUpdateListener() {
-            @Override
-            public void onUpdate(String chatId) {
-                sendMessTherdChat();
-            }
-        });
-        tracker.startTracking("чат 4", new MessageListenerService.ChatUpdateListener() {
-            @Override
-            public void onUpdate(String chatId) {
-                sendMessFourChat();
             }
         });
 
@@ -85,19 +66,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void sendMessFirstChat() {
         NotificationHelper notificationHelper = new NotificationHelper(this);
-        notificationHelper.sendNotification("New message", "Новое сообщение в Чат 1");
-    }
-    private void sendMessSecondChat() {
-        NotificationHelper notificationHelper = new NotificationHelper(this);
-        notificationHelper.sendNotification("New message", "Новое сообщение в Чат 2");
-    }
-    private void sendMessTherdChat() {
-        NotificationHelper notificationHelper = new NotificationHelper(this);
-        notificationHelper.sendNotification("New message", "Новое сообщение в Чат 3");
-    }
-    private void sendMessFourChat() {
-        NotificationHelper notificationHelper = new NotificationHelper(this);
-        notificationHelper.sendNotification("New message", "Новое сообщение в Чат 4");
+        notificationHelper.sendNotification("New message", "Новое сообщение");
     }
 
 

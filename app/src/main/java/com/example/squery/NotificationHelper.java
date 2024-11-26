@@ -13,7 +13,7 @@ import androidx.core.app.NotificationCompat;
 //                                                          ОТПРАВКА УВЕДОМЛЕНИЙ
 
 
-public class NotificationHelper {
+public class NotificationHelper{
 
     private static final String CHANNEL_ID = "default_channel";
     private static final String CHANNEL_NAME = "Default Channel";
