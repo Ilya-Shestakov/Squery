@@ -40,7 +40,9 @@ public class sing_in extends AppCompatActivity {
     private String firebaseUserID = "";
     private String firebaseUserName = "";
 //    FirebaseDatabase database = FirebaseDatabase.getInstance();
-    MessagingUtils messagingUtils = new MessagingUtils();
+//    MessagingUtils messagingUtils = new MessagingUtils();
+
+    AuthHelper authHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +50,7 @@ public class sing_in extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_sing_in);
 
-        messagingUtils.logToken();
+//        messagingUtils.logToken();
     }
 
     public void sing_in_register(View view) {
@@ -58,6 +60,24 @@ public class sing_in extends AppCompatActivity {
         EditText edit_username = findViewById(R.id.edit_username);
         EditText edit_email = findViewById(R.id.edit_email);
         EditText edit_pass = findViewById(R.id.edit_pass);
+
+
+        authHelper = new AuthHelper(this);
+
+
+        authHelper.login(edit_username.getText().toString(), edit_email.getText().toString(), new AuthHelper.OnLoginListener() {
+            @Override
+            public void onLoginSuccess() {
+                startActivity(new Intent(sing_in.this, Chats_list.class));
+                finish();
+            }
+
+            @Override
+            public void onLoginFailure(String message) {
+                Toast.makeText(sing_in.this, message, Toast.LENGTH_SHORT).show();
+            }
+        });
+
 
         if (edit_email.equals("")) {
             Toast.makeText(this, "Enter the email", Toast.LENGTH_SHORT).show();

@@ -30,13 +30,24 @@ public class sing_up extends AppCompatActivity {
         SharedPreferences token = getSharedPreferences("username", Context.MODE_PRIVATE);
     }
 
+    public void go_sing_in(View view){
+        Intent intent = new Intent(this, sing_in.class);
+        startActivity(intent);
+        finish();
+    }
+
     public void sing_in_of_sing_up(View view) {
 
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
 
+        AuthHelper authHelper = new AuthHelper(this);
+
+
         String edit_email_sing_up = ((EditText) findViewById(R.id.edit_email_sing_up)).getText().toString();
         String edit_password_sing_up = ((EditText) findViewById(R.id.edit_pass_sing_up)).getText().toString();
+
+        authHelper.saveUser(edit_email_sing_up);
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("Users");

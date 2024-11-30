@@ -199,6 +199,7 @@ public class Chats_list extends AppCompatActivity {
 
 
 
+
         final String[] retPass = new String[1];
 
         // Получаем ссылку на базу данных Firebase
@@ -344,8 +345,10 @@ public class Chats_list extends AppCompatActivity {
     @Override
     public void onBackPressed() {
 
-        Intent intent = new Intent(this, sing_up.class);
-        startActivity(intent);
+        AuthHelper authHelper = new AuthHelper(this);
+
+        authHelper.logout();
+        startActivity(new Intent(this, MainActivity.class));
         finish();
 
         super.onBackPressed();

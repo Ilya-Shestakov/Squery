@@ -31,20 +31,33 @@ public class MainActivity extends AppCompatActivity {
 
     private static final int REQUEST_CODE_POST_NOTIFICATIONS = 1;
 
+    private AuthHelper authHelper;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        authHelper = new AuthHelper(this);
+
+        if (authHelper.isLoggedIn()) {
+            startActivity(new Intent(MainActivity.this, Chats_list.class));
+            finish(); // Закрываем MainActivity после успешного автологина
+        } else {
+            // Переход к экрану входа
+            startActivity(new Intent(MainActivity.this, sing_up.class));
+            finish();
+        }
+
         //Stoper
         //tracker.stopTracking();
 
-        tracker.startTracking("чат 1", new MessageListenerService.ChatUpdateListener() {
-            @Override
-            public void onUpdate(String chatId) {
-                sendMessFirstChat();
-            }
-        });
+//        tracker.startTracking("чат 1", new MessageListenerService.ChatUpdateListener() {
+//            @Override
+//            public void onUpdate(String chatId) {
+//                sendMessFirstChat();
+//            }
+//        });
 
 
 
