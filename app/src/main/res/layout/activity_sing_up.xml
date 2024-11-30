@@ -65,7 +65,7 @@
         >
 
         <EditText
-            android:id="@+id/edit_email_sing_up"
+            android:id="@+id/edit_username_sing_up"
 
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -76,7 +76,7 @@
 
             android:textColor="@color/black"
 
-            android:hint="Email..."
+            android:hint="Username..."
 
             android:fontFamily="@font/adlam_display"
             android:textColorHint="@color/black"
@@ -97,7 +97,7 @@
 
             android:layout_height="wrap_content"
 
-            app:layout_constraintTop_toBottomOf="@+id/edit_email_sing_up"
+            app:layout_constraintTop_toBottomOf="@+id/edit_username_sing_up"
 
             android:inputType="textPassword"
 
@@ -117,7 +117,26 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <TextView
+        android:id="@+id/textFogotPass"
+        android:onClick="fogotPass"
 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:text="Забыли пароль?"
+        android:fontFamily="@font/kavoon"
+        android:textSize="15dp"
+        android:textStyle="bold"
+        android:textColor="#6097EB"
+
+        app:layout_constraintTop_toBottomOf="@+id/back_blok"
+        app:layout_constraintEnd_toEndOf="@+id/back_blok"
+        app:layout_constraintBottom_toTopOf="@+id/btn_sing_up_of_sing_up"
+
+        android:layout_marginEnd="20dp"
+
+        tools:ignore="HardcodedText" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
 
@@ -194,7 +213,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/back_blok"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="60dp"
 
         android:background="@drawable/edit_texts_back"
 

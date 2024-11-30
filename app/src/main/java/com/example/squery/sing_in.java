@@ -32,7 +32,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-
 public class sing_in extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
@@ -80,7 +79,7 @@ public class sing_in extends AppCompatActivity {
 
 
         if (edit_email.equals("")) {
-            Toast.makeText(this, "Enter the email", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Enter the username", Toast.LENGTH_SHORT).show();
         } else if (edit_pass.equals("")) {
             Toast.makeText(this, "Enter the password", Toast.LENGTH_SHORT).show();
         } else {
@@ -90,10 +89,10 @@ public class sing_in extends AppCompatActivity {
 //            refUserLogin.push().setValue(edit_username.getText().toString());
 
 
-            mAuth.createUserWithEmailAndPassword(edit_email.getText().toString(), edit_pass.getText().toString())
-                    .addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
-                            firebaseUserID = mAuth.getCurrentUser().getUid();
+//            mAuth.createUserWithEmailAndPassword(edit_email.getText().toString(), edit_pass.getText().toString())
+//                    .addOnCompleteListener(task -> {
+//                        if (task.isSuccessful()) {
+//                            firebaseUserID = mAuth.getCurrentUser().getUid();
 //                            firebaseUserName = mAuth.getCurrentUser().getDisplayName();
 
                             firebaseUserName = edit_username.getText().toString();
@@ -116,7 +115,10 @@ public class sing_in extends AppCompatActivity {
                             refUser.updateChildren(userHashMap)
                                     .addOnCompleteListener(task1 -> {
                                         if (task1.isSuccessful()) {
-                                            onBackPressed();
+
+                                            Intent intent = new Intent(this, Chats_list.class);
+                                            startActivity(intent);
+                                            finish();
                                         }
                                     });
 
@@ -141,10 +143,10 @@ public class sing_in extends AppCompatActivity {
 //                                            finish();
 //                                        }
 //                                    });
-                        } else {
-                            Toast.makeText(this, Objects.requireNonNull(task.getException()).toString(), Toast.LENGTH_LONG).show();
-                        }
-                    });
+//                        } else {
+//                            Toast.makeText(this, Objects.requireNonNull(task.getException()).toString(), Toast.LENGTH_LONG).show();
+//                        }
+//                    });
         }
     }
 

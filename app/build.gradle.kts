@@ -34,6 +34,10 @@ android {
 
 dependencies {
     implementation ("com.squareup.okhttp3:okhttp:4.11.0")
+    implementation ("com.google.firebase:firebase-appdistribution-gradle:1.4.1")
+    implementation ("com.google.firebase:firebase-database:9.0.0")
+    implementation ("com.google.gms:google-services:3.0.0")
+
     implementation(platform(libs.firebase.bom))
     implementation(libs.appcompat)
     implementation(libs.material)
