@@ -63,8 +63,7 @@ public class sing_in extends AppCompatActivity {
 
         authHelper = new AuthHelper(this);
 
-
-        authHelper.login(edit_username.getText().toString(), edit_email.getText().toString(), new AuthHelper.OnLoginListener() {
+        authHelper.login(edit_username.getText().toString(), edit_pass.getText().toString(), new AuthHelper.OnLoginListener() {
             @Override
             public void onLoginSuccess() {
                 startActivity(new Intent(sing_in.this, Chats_list.class));

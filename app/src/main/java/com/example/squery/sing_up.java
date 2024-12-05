@@ -55,8 +55,9 @@ public class sing_up extends AppCompatActivity {
 
         verifyPassword(edit_password_sing_up, edit_username_sing_up);
 
+        AuthHelper authHelper = new AuthHelper(this);
 
-//        authHelper.saveUser(edit_email_sing_up);
+        authHelper.saveUser(edit_username_sing_up);
 //
 //        FirebaseDatabase database = FirebaseDatabase.getInstance();
 //        DatabaseReference myRef = database.getReference("Users");
@@ -99,13 +100,12 @@ public class sing_up extends AppCompatActivity {
 //                                            if (user.getEmail().equals(edit_email_sing_up)) {
 //                                                // Нашли пользователя!
 //                                                String userId = userSnapshot.getKey(); // Получаем ключ пользователя
-////                                                Log.d("Firebase", "Пользователь найден" + userId);
+//                                                Log.d("Firebase", "Пользователь найден" + userId);
 //
 //
 //                                                intent(userId);
 //
-//
-////                                                Toast.makeText(sing_up.this, "User found: " + userId, Toast.LENGTH_SHORT).show();
+//                                                Toast.makeText(sing_up.this, "User found: " + userId, Toast.LENGTH_SHORT).show();
 //
 //                                                //  Здесь вы можете использовать userId для дальнейших действий
 //                                            }

@@ -26,15 +26,15 @@ public class AuthHelper {
         return sharedPreferences.contains("username");
     }
 
-    public void login(String email, String password, final OnLoginListener listener) {
-        DatabaseReference userRef = databaseReference.child(email); // Ссылка на каталог пользователя
+    public void login(String username, String password, final OnLoginListener listener) {
+        DatabaseReference userRef = databaseReference.child(username); // Ссылка на каталог пользователя
         userRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     String storedPassword = dataSnapshot.child("password").getValue(String.class);
                     if (password.equals(storedPassword)) {
-                        saveUser(email); // Сохраняем username после успешного входа
+                        saveUser(username); // Сохраняем username после успешного входа
                         listener.onLoginSuccess();
                     } else {
                         listener.onLoginFailure("Неверный пароль");
