@@ -11,11 +11,14 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
@@ -114,10 +117,9 @@ public class sing_in extends AppCompatActivity {
                             refUser.updateChildren(userHashMap)
                                     .addOnCompleteListener(task1 -> {
                                         if (task1.isSuccessful()) {
-
-                                            Intent intent = new Intent(this, Chats_list.class);
+                                            Toast.makeText(this, "Пользователь успешно зарегистрирован!", Toast.LENGTH_SHORT).show();
+                                            Intent intent = new Intent(this, sing_up.class);
                                             startActivity(intent);
-                                            finish();
                                         }
                                     });
 
@@ -147,6 +149,12 @@ public class sing_in extends AppCompatActivity {
 //                        }
 //                    });
         }
+    }
+
+    public void go_sing_up(View view){
+        Intent intent = new Intent(this, sing_up.class);
+        startActivity(intent);
+        finish();
     }
 
     @Override

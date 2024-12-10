@@ -3,6 +3,8 @@
     <array name="preloaded_fonts" translatable="false">
         <item>@font/adlam_display</item>
         <item>@font/ar_one_sans</item>
+        <item>@font/archivo_black</item>
         <item>@font/kavoon</item>
+        <item>@font/zen_antique_soft</item>
     </array>
 </resources>

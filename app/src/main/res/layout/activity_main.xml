@@ -67,21 +67,20 @@
 
             android:fontFamily="@font/adlam_display"
             android:gravity="center"
+            android:shadowColor="@color/secondColorBlue"
+            android:shadowDx="1"
+            android:shadowDy="1"
+            android:shadowRadius="35"
+
             android:text="@string/squery_messenger"
             android:textColor="@color/black"
-            android:textSize="30sp"
-            android:textStyle="normal"
 
+            android:textSize="30sp"
+
+            android:textStyle="normal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-
-            tools:layout_editor_absoluteY="10dp"
-
-            android:shadowColor="@color/secondColorBlue"
-            android:shadowDy="1"
-            android:shadowDx="1"
-            android:shadowRadius="35"
-            />
+            tools:layout_editor_absoluteY="10dp" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
