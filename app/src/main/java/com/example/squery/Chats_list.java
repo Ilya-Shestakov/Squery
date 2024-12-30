@@ -328,8 +328,9 @@ public class Chats_list extends AppCompatActivity {
                 findChat.dismiss();
             }
         });
-
     }
+
+
 
 
     private void handleSearchAndDismiss() {

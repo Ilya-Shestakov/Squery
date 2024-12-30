@@ -19,7 +19,7 @@
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginHorizontal="20dp"
 
-        android:hint="Name..."
+        android:hint="Название..."
         android:textColorHint="@color/black"
         android:fontFamily="@font/oxygen_mono"
         android:textStyle="bold"

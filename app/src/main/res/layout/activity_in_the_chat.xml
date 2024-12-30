@@ -70,7 +70,7 @@
 
             android:paddingStart="5dp"
 
-            android:hint="Password"
+            android:hint="Пароль"
             android:textColor="@color/black"
             android:textSize="20dp"
             android:textColorHint="@color/black"

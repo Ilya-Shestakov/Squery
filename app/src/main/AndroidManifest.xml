@@ -19,6 +19,17 @@
         <activity
             android:name=".dialog_find_chat"
             android:exported="false" />
+
+        <activity
+            android:name=".SplashScreenActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
         <activity
             android:name=".in_the_chat"
             android:exported="false" />
@@ -27,10 +38,10 @@
             android:exported="false" />
         <activity
             android:name=".Chats_list"
-            android:exported="false"></activity>
+            android:exported="false"/>
         <activity
             android:name=".Chat1"
-            android:exported="false"></activity>
+            android:exported="false"/>
         <activity
             android:name=".sing_up"
             android:exported="false" />
@@ -39,12 +50,7 @@
             android:exported="false" />
         <activity
             android:name=".MainActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            android:exported="false">
         </activity>
 
         <meta-data
