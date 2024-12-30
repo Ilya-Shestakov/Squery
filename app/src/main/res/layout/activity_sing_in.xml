@@ -9,7 +9,6 @@
     android:background="@color/white"
     >
 
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="1000dp"
 
@@ -24,11 +23,11 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-
     <ImageView
+        android:id="@+id/imgPapageySingIn"
+
         android:layout_width="250dp"
         android:layout_height="250dp"
-        android:layout_marginBottom="-30dp"
         android:src="@drawable/squeryv2"
         app:layout_constraintBottom_toTopOf="@+id/back_blok"
         android:layout_marginEnd="5dp"
@@ -45,6 +44,8 @@
         android:layout_marginHorizontal="40dp"
 
         android:background="@drawable/edit_texts_back"
+
+        android:layout_marginBottom="100dp"
 
         android:elevation="10dp"
 
@@ -84,7 +85,8 @@
 
                     android:backgroundTint="@color/outLine"
 
-                    android:fontFamily="@font/zen_antique_soft"
+                    android:fontFamily="@font/oxygen_mono"
+                    android:textStyle="bold"
 
                     android:gravity="left"
 
@@ -128,12 +130,12 @@
 
                     android:hint="Логин..."
 
-                    android:fontFamily="@font/zen_antique_soft"
+                    android:fontFamily="@font/oxygen_mono"
+                    android:textStyle="bold"
+
                     android:textColorHint="@color/black"
                     android:textSize="25dp"
                     android:paddingStart="5dp"
-
-                    android:maxLength="20"
 
                     android:layout_marginTop="10dp"
 
@@ -161,7 +163,7 @@
 
                 <EditText
 
-                    android:minLines="6"
+                    android:minLines="7"
 
                     android:layout_marginTop="10dp"
 
@@ -177,9 +179,8 @@
 
                     android:hint="Пароль..."
 
-
-
-                    android:fontFamily="@font/zen_antique_soft"
+                    android:fontFamily="@font/oxygen_mono"
+                    android:textStyle="bold"
                     android:textColorHint="@color/black"
                     android:textSize="25dp"
                     android:paddingStart="5dp"
@@ -208,7 +209,7 @@
 
         android:onClick="go_sing_up"
 
-        android:layout_width="250dp"
+        android:layout_width="200dp"
         android:layout_height="50dp"
 
         app:layout_constraintBottom_toBottomOf="parent"
@@ -223,12 +224,12 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
 
-            android:text="Уже есть аккаунт?"
+            android:text="Есть аккаунт?"
             android:textColor="@color/white"
             android:textSize="23dp"
-            android:gravity="center_vertical"
-            android:paddingStart="10dp"
-            android:fontFamily="@font/zen_antique_soft"
+            android:gravity="center"
+            android:fontFamily="@font/oxygen_mono"
+            android:textStyle="bold"
             />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

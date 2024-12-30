@@ -58,78 +58,7 @@ public class sing_up extends AppCompatActivity {
         AuthHelper authHelper = new AuthHelper(this);
 
         authHelper.saveUser(edit_username_sing_up);
-//
-//        FirebaseDatabase database = FirebaseDatabase.getInstance();
-//        DatabaseReference myRef = database.getReference("Users");
-//
-//        myRef.child("username").addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//
-//            }
-//        });
-//
-//
-//        if (edit_email_sing_up.equals("")) {
-//            Toast.makeText(this, "Enter the email", Toast.LENGTH_SHORT).show();
-//        } else if (edit_password_sing_up.equals("")) {
-//            Toast.makeText(this, "Enter the password", Toast.LENGTH_SHORT).show();
-//        } else {
-//            mAuth.signInWithEmailAndPassword(edit_email_sing_up, edit_password_sing_up)
-//                    .addOnCompleteListener(task -> {
-//                        if (task.isSuccessful()) {
-//
-//
-//
-//                            DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
-//
-//
-//                            ref.addListenerForSingleValueEvent(new ValueEventListener() {
-//                                @Override
-//                                public void onDataChange(DataSnapshot dataSnapshot) {
-//                                    if (dataSnapshot.exists()) {
-//                                        for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
-//                                            // Получаем данные о пользователе
-//                                            User user = userSnapshot.getValue(User.class);
-//
-//                                            // Проверяем email
-//                                            if (user.getEmail().equals(edit_email_sing_up)) {
-//                                                // Нашли пользователя!
-//                                                String userId = userSnapshot.getKey(); // Получаем ключ пользователя
-//                                                Log.d("Firebase", "Пользователь найден" + userId);
-//
-//
-//                                                intent(userId);
-//
-//                                                Toast.makeText(sing_up.this, "User found: " + userId, Toast.LENGTH_SHORT).show();
-//
-//                                                //  Здесь вы можете использовать userId для дальнейших действий
-//                                            }
-//                                        }
-//                                    } else {
-//                                        Toast.makeText(sing_up.this, "User not found", Toast.LENGTH_SHORT).show();
-//                                    }
-//                                }
-//
-//                                @Override
-//                                public void onCancelled(DatabaseError databaseError) {
-//                                    Log.w("Firebase", "Ошибка при чтении данных", databaseError.toException());
-//                                }
-//                            });
-//
-//
-//
-//                            //Toast.makeText(this, "Sing up", Toast.LENGTH_LONG).show();
-//
-//                        } else {
-//                            Toast.makeText(this, task.getException().toString(), Toast.LENGTH_LONG).show();
-//                        }
-//                    });
-//        }
+
     }
 
 

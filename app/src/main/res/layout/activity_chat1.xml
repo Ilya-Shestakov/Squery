@@ -29,14 +29,14 @@
             android:layout_width="0dp"
             android:layout_height="35dp"
 
-            android:fontFamily="@font/adlam_display"
+            android:fontFamily="@font/oxygen_mono"
+            android:textStyle="bold"
             android:gravity="center_vertical"
 
             android:paddingStart="10dp"
             android:text="Username"
             android:textColor="@color/black"
             android:textSize="20dp"
-            android:textStyle="bold"
             tools:ignore="HardcodedText,RtlSymmetry,SpUsage"
 
             app:layout_constraintStart_toStartOf="parent"
@@ -50,7 +50,8 @@
             android:layout_width="0dp"
             android:layout_height="35dp"
 
-            android:fontFamily="@font/adlam_display"
+            android:fontFamily="@font/oxygen_mono"
+            android:textStyle="bold"
             android:gravity="center_vertical"
 
             app:layout_constraintStart_toStartOf="parent"
@@ -61,7 +62,6 @@
             android:text="Chatname"
             android:textColor="@color/black"
             android:textSize="20dp"
-            android:textStyle="bold"
             tools:ignore="HardcodedText,RtlSymmetry,SpUsage"
             />
 
@@ -108,7 +108,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:hint="Messenge..."
-            android:fontFamily="@font/adlam_display"
+            android:fontFamily="@font/oxygen_mono"
+            android:textStyle="bold"
             android:textColor="@color/black"
             android:textColorHint="@color/black"
             android:textSize="15dp"
@@ -145,15 +146,13 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/resViewMess"
-
         android:layout_width="match_parent"
         android:layout_height="0dp"
-
         app:layout_constraintTop_toBottomOf="@+id/title_with_username"
         app:layout_constraintBottom_toTopOf="@+id/bottomPanel"
         android:layout_marginTop="20dp"
-        android:layout_marginBottom="15dp"
-        />
+        android:layout_marginBottom="0dp"
+    />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -41,7 +41,11 @@ public class MainActivity extends AppCompatActivity {
         authHelper = new AuthHelper(this);
 
         if (authHelper.isLoggedIn()) {
-            startActivity(new Intent(MainActivity.this, Chats_list.class));
+
+            Intent intent = new Intent(MainActivity.this, Chats_list.class);
+            intent.putExtra("Username", authHelper.getUsername());
+            startActivity(intent);
+
             finish(); // Закрываем MainActivity после успешного автологина
         } else {
             // Переход к экрану входа

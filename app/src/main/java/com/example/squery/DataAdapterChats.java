@@ -12,35 +12,41 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class DataAdapterChats extends RecyclerView.Adapter<ViewHolderChats> {
 
     ArrayList<String> chats;
+    ArrayList<String> filteredChats;
     LayoutInflater inflater;
 
     public DataAdapterChats(Context context, ArrayList<String> chats){
         this.chats = chats;
+        this.filteredChats = new ArrayList<>(chats);
         this.inflater = LayoutInflater.from(context);
     }
 
     @NonNull
     @Override
     public ViewHolderChats onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-
         View view = inflater.inflate(R.layout.chat_item_element, parent, false);
-
         return new ViewHolderChats(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolderChats holder, int position) {
-        String mag = chats.get(position);
+        String mag = filteredChats.get(position);
         holder.chats.setText(mag);
     }
 
     @Override
     public int getItemCount() {
-        return chats.size();
+        return filteredChats.size();
+    }
+
+    public void updateList(List<String> newList) {
+        this.filteredChats = new ArrayList<>(newList);
+        notifyDataSetChanged();
     }
 
     public int getItemIndex(int position) {

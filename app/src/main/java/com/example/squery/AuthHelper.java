@@ -26,6 +26,10 @@ public class AuthHelper {
         return sharedPreferences.contains("username");
     }
 
+    public String getUsername() {
+        return sharedPreferences.getString("username", "System Error");
+    }
+
     public void login(String username, String password, final OnLoginListener listener) {
         DatabaseReference userRef = databaseReference.child(username); // Ссылка на каталог пользователя
         userRef.addListenerForSingleValueEvent(new ValueEventListener() {

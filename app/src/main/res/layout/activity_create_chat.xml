@@ -3,11 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
+    tools:context=".createChat"
     android:layout_width="300dp"
     android:layout_height="230dp"
-    tools:context=".createChat"
     android:background="@drawable/btn_from_reg_and_log"
     android:layout_gravity="center"
+    android:elevation="15dp"
     >
 
     <TextView
@@ -19,7 +20,8 @@
         android:text="Create Chat"
         android:textColor="@color/black"
         android:textSize="25dp"
-        android:fontFamily="@font/adlam_display"
+        android:fontFamily="@font/oxygen_mono"
+        android:textStyle="bold"
 
         app:layout_constraintTop_toTopOf="parent"
         tools:layout_editor_absoluteX="0dp" />
@@ -47,7 +49,8 @@
             android:layout_height="wrap_content"
 
             android:backgroundTint="@color/black"
-            android:fontFamily="@font/adlam_display"
+            android:fontFamily="@font/oxygen_mono"
+            android:textStyle="bold"
             android:hint="Name..."
             android:textColor="@color/black"
 
@@ -90,9 +93,12 @@
             android:textColor="@color/black"
             android:textSize="20dp"
             android:textColorHint="@color/black"
-            android:fontFamily="@font/adlam_display"
+            android:fontFamily="@font/oxygen_mono"
+            android:textStyle="bold"
 
             android:layout_marginTop="5dp"
+
+            android:minLines="6"
 
             android:backgroundTint="@color/black"
 

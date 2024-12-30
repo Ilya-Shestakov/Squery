@@ -6,9 +6,12 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Rect;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewTreeObserver;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -56,17 +59,16 @@ import java.util.Objects;
 public class Chat1 extends AppCompatActivity {
 
     TextView chatname_title_of_chat, username_title_of_chat;
-
-    ConstraintLayout btnSendMess, btnDelAll;
+    ConstraintLayout btnSendMess, btnDelAll, bottomPanel;
     EditText editTextMess;
     RecyclerView mMessagesRecycler;
+    public int keyboardHeight = 0;
 
     ArrayList<String> messages = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_chat1);
 
         chatname_title_of_chat = findViewById(R.id.chatname_title_of_chat);
@@ -103,36 +105,45 @@ public class Chat1 extends AppCompatActivity {
 
         chatname_title_of_chat.setText(chatname);
 
+        DataAdapter dataAdapter = new DataAdapter(this, messages);
+
         btnSendMess = findViewById(R.id.btnSendMess);
-        editTextMess = findViewById(R.id.editTextMess);
         mMessagesRecycler = findViewById(R.id.resViewMess);
+        editTextMess = findViewById(R.id.editTextMess);
+        bottomPanel = findViewById(R.id.bottomPanel); // Получаем ссылку на bottomPanel
 
         mMessagesRecycler.setLayoutManager(new LinearLayoutManager(this));
-
-        DataAdapter dataAdapter = new DataAdapter(this, messages);
 
         mMessagesRecycler.setAdapter(dataAdapter);
 
         btnSendMess.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(View v) {
                 if (!editTextMess.getText().toString().trim().isEmpty()) {
                     if (editTextMess.getText().toString().length() <= 500) {
-                        myRef.push().setValue(username + ":  " + editTextMess.getText().toString());
+                        //ВАЖНО: Замените  myRef на ваше подключение к базе данных.
+                        myRef.push().setValue(username + ":  " + editTextMess.getText().toString()); //Используйте myRef, а не firebaseInstance.
                         editTextMess.setText("");
+//                        hideKeyboard();
                     }
                 }
             }
         });
+
+        ViewTreeObserver.OnGlobalLayoutListener layoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                adjustRecyclerView();
+            }
+        };
+        View rootView = findViewById(android.R.id.content);
+        rootView.getViewTreeObserver().addOnGlobalLayoutListener(layoutListener);
 
 
 
         myRef.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
-
-
 
                 String mag = snapshot.getValue(String.class);
 
@@ -164,11 +175,36 @@ public class Chat1 extends AppCompatActivity {
 
     }
 
-    public void backPressHand(){
-        Intent intent1 = new Intent(this, Chats_list.class);
-        startActivity(intent1);
-        finish();
+    private void hideKeyboard() {
+        View view = this.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
     }
+
+    private void adjustRecyclerView() {
+        Rect rect = new Rect();
+        View rootView = findViewById(android.R.id.content);
+        rootView.getWindowVisibleDisplayFrame(rect);
+        int screenHeight = rootView.getHeight();
+        int keyboardHeightNow = screenHeight - rect.bottom;
+
+        if (keyboardHeightNow != keyboardHeight) {
+            keyboardHeight = keyboardHeightNow;
+            ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) mMessagesRecycler.getLayoutParams();
+
+            if (keyboardHeight > 0) {
+                params.bottomToBottom = bottomPanel.getId();
+                mMessagesRecycler.setLayoutParams(params);
+            } else {
+                params.bottomToBottom = bottomPanel.getId();
+                mMessagesRecycler.setLayoutParams(params);
+            }
+            mMessagesRecycler.requestLayout();
+        }
+    }
+
 
     @Override
     public void onBackPressed() {
@@ -180,6 +216,8 @@ public class Chat1 extends AppCompatActivity {
         intent1.putExtra("Username", username);
         startActivity(intent1);
         finish();
-
     }
+
+
+
 }

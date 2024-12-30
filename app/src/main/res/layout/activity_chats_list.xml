@@ -8,6 +8,17 @@
     tools:context=".Chats_list"
     android:background="@color/white">
 
+    <ImageView
+        android:layout_width="1000dp"
+        android:layout_height="1000dp"
+
+        android:elevation="-10dp"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="-190dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:src="@drawable/sinv2"
+        />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/title_with_username"
@@ -15,26 +26,28 @@
         android:layout_width="match_parent"
         android:layout_height="70dp"
 
-        android:background="@color/white"
+        android:background="@color/neon"
 
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="40dp"
 
-        android:elevation="15dp"
+        android:elevation="5dp"
         >
 
         <TextView
             android:id="@+id/username_title_of_chats_list"
 
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            app:layout_constraintStart_toStartOf="parent"
 
+            android:fontFamily="@font/oxygen_mono"
+            android:textStyle="bold"
             android:gravity="center_vertical"
-            android:paddingStart="10dp"
 
+            android:paddingStart="10dp"
             android:text="Username"
-            android:textColor="@color/black"
-            android:fontFamily="@font/adlam_display"
+            android:textColor="@color/white"
             android:textSize="25dp"
             tools:ignore="HardcodedText,RtlSymmetry,SpUsage" />
 
@@ -58,6 +71,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/btn_find_chat"
+            android:onClick="method_find_chat"
             android:layout_width="50dp"
             android:layout_height="50dp"
             app:layout_constraintTop_toTopOf="parent"
@@ -69,7 +83,7 @@
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:src="@drawable/baseline_search_24"
+                android:src="@drawable/baseline_manage_search_24"
                 />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -77,20 +91,18 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view_in_chats_list"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintTop_toBottomOf="@+id/title_with_username"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="20dp"
         android:layout_marginHorizontal="10dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="140dp"
+        android:layout_marginBottom="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/title_with_username"
 
-        />
-
-
+        app:layout_constraintVertical_bias="1.0"
+        tools:layout_editor_absoluteX="9dp" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
