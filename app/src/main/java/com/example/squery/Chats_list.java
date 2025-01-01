@@ -441,7 +441,7 @@ public class Chats_list extends AppCompatActivity {
     }
 
 
-    public void intent(String Username, String chatName){
+    public void intent(String chatName, String Username){
 
         Intent intent = new Intent(this, Chat1.class);
         intent.putExtra("Chatname", chatName);
