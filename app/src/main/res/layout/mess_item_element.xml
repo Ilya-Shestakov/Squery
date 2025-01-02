@@ -22,7 +22,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="123mess1"
-            android:textSize="24dp"
+            android:textSize="20dp"
             android:fontFamily="@font/oxygen_mono"
             android:textStyle="bold"
             android:textColor="@color/black"

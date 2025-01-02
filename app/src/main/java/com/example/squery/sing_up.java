@@ -108,7 +108,7 @@ public class sing_up extends AppCompatActivity {
                         Toast.makeText(sing_up.this, "Пароль не найден для пользователя " + username, Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    Toast.makeText(sing_up.this, "Пользователь " + username + " не найден", Toast.LENGTH_SHORT).show();
+
                 }
             }
 
@@ -143,8 +143,6 @@ public class sing_up extends AppCompatActivity {
                     } else {
                         Toast.makeText(sing_up.this, "Пароль не найден для пользователя " + username, Toast.LENGTH_SHORT).show();
                     }
-                } else {
-                    Toast.makeText(sing_up.this, "Пользователь " + username + " не найден", Toast.LENGTH_SHORT).show();
                 }
             }
 

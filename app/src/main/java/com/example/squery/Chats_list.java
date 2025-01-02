@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.opengl.GLDebugHelper;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -34,12 +35,15 @@ import com.google.firebase.database.ValueEventListener;
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
 public class Chats_list extends AppCompatActivity {
 
-    RecyclerView recycler_view_in_chats_list;
+    RecyclerView recycler_view_in_chats_list, recyclerViewMyChats;
+    DBHelper dbHelper;
+    SQLiteDataAdapter sqLiteDataAdapter;
     TextView username_title_of_chats_list, titleWelcomeChat;
     ConstraintLayout btn_add_chat, btn_create_chat, btn_welcome_chat, btn_delete_chat, btn_find_chat_in_wind;
     EditText editTextChatName, editTextChatPass, editTextCheckPass, searchEditText;
@@ -51,7 +55,7 @@ public class Chats_list extends AppCompatActivity {
 
     DatabaseReference myRefChats = database.getReference("Chats");
 
-    public Dialog createChat, welcomeChat, findChat;
+    public Dialog createChat, welcomeChat, findChat, myChats;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,20 +65,20 @@ public class Chats_list extends AppCompatActivity {
 
         welcomeChat = new Dialog(Chats_list.this);
         findChat = new Dialog(Chats_list.this);
+        createChat = new Dialog(Chats_list.this);
+        myChats = new Dialog(Chats_list.this);
 
         btn_add_chat = findViewById(R.id.btn_add_chat);
         username_title_of_chats_list = findViewById(R.id.username_title_of_chats_list);
         recycler_view_in_chats_list = findViewById(R.id.recycler_view_in_chats_list);
 
 
-        createChat = new Dialog(Chats_list.this);
         chats = getChatTitles();
 
         dataAdapter = new DataAdapterChats(this, chats);
 
         recycler_view_in_chats_list.setLayoutManager(new LinearLayoutManager(this));
         recycler_view_in_chats_list.setAdapter(dataAdapter);
-
 
         String Username = getIntent().getStringExtra("Username");
 
@@ -87,7 +91,11 @@ public class Chats_list extends AppCompatActivity {
                 createChatDialog(myRefChats);
             }
         });
+
+
+
         //                                                                  TOUCH EVENT
+
 
 
         recycler_view_in_chats_list.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
@@ -248,7 +256,7 @@ public class Chats_list extends AppCompatActivity {
                 FirebasePasswordRemover removerPass = new FirebasePasswordRemover();
                 removerPass.deletePasswordChat(chatname);
 
-                deleteChat(myRefChats, chatname);
+                deleteChat(myRefChats, chatname, chatname);
 
 //                Objects.requireNonNull(myRefChats.child(titleWelcomeChat.toString()).getKey())
 
@@ -260,7 +268,9 @@ public class Chats_list extends AppCompatActivity {
     }
 
 
-    public void deleteChat(DatabaseReference chatsRef, String targetValue){
+    public void deleteChat(DatabaseReference chatsRef, String targetValue, String chatName){
+        DBHelper dbHelper = new DBHelper(this);
+
         Query query = chatsRef.orderByValue().equalTo(targetValue);
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -280,6 +290,9 @@ public class Chats_list extends AppCompatActivity {
                                 }
                             }
                         });
+
+                        dbHelper.deleteChatByName(chatName);
+
                     }
                 } else {
                     System.out.println("No data found with the value: " + targetValue);
@@ -346,7 +359,11 @@ public class Chats_list extends AppCompatActivity {
                 filteredList.add(chat);
             }
         }
-        dataAdapter.updateList(filteredList);
+        if (filteredList.size() == 1) {
+            dataAdapter.updateList(filteredList);
+        } else {
+            toast("Введите более точное название");
+        }
     }
 
 
@@ -416,29 +433,125 @@ public class Chats_list extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                if ((editTextChatPass.getText().toString().length()) <= 5){
-                    toast("Пароль ненадёжный");
-                } else {
-                    DatabaseReference myRefPasswords = database.getReference("Passwords/" + editTextChatName.getText().toString());
+                DatabaseReference refChats = FirebaseDatabase.getInstance().getReference().child("Chats");
 
-                    myRefChats.push().setValue(editTextChatName.getText().toString());
-                    myRefPasswords.push().setValue(editTextChatPass.getText().toString());
+                // Проверяем, есть ли пользователь с таким именем
+                refChats.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.hasChild(editTextChatName.getText().toString())) {
+                            // Пользователь с таким именем уже существует
+                            toast("Такой чат уже существует");
+                        } else {
 
-                    createChat.cancel();
+                            if (editTextChatName.getText().toString().indexOf("Илья") != -1){
+                                toast("Тима иди в хер, люблю тебя)");
+                            }
+                            else{
+                                // Пользователя с таким именем не существует, можно создавать
+                                if ((editTextChatPass.getText().toString().length()) <= 5){
+                                    toast("Пароль ненадёжный");
+                                } else {
+                                    DatabaseReference myRefPasswords = database.getReference("Passwords/" + editTextChatName.getText().toString());
 
-                    String Username = getIntent().getStringExtra("Username");
+                                    myRefChats.push().setValue(editTextChatName.getText().toString());
+                                    myRefPasswords.push().setValue(editTextChatPass.getText().toString());
 
-                    intent(editTextChatName.getText().toString(), Username);
+                                    createChat.cancel();
 
-                    toast("Пароль: " + editTextChatPass.getText().toString());
+                                    String Username = getIntent().getStringExtra("Username");
 
-                }
+                                    intent(editTextChatName.getText().toString(), Username);
+
+                                    toast("Пароль: " + editTextChatPass.getText().toString());
+
+                                }
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        // Ошибка при проверке, выводим сообщение
+                        toast("Ошибка проверки на индивидуальность");
+                    }
+                });
+
 
 //                Toast.makeText(Chats_list.this, "Developers working for this ...", Toast.LENGTH_SHORT).show();
             }
         });
 
     }
+
+
+
+
+//                                                  MY_CHATS
+
+
+    public void method_my_chats(View view){
+
+        myChats.setContentView(R.layout.activity_my_chats);
+        myChats.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        myChats.show();
+
+
+        if (myChats.isShowing()) {
+
+            recyclerViewMyChats = myChats.findViewById(R.id.recyclerViewMyChats);
+            dbHelper = new DBHelper(this);
+
+            // Получаем данные из базы данных
+            List<ChatItem> chatItems = dbHelper.getAllChats();
+
+            // Создаем адаптер
+            sqLiteDataAdapter = new SQLiteDataAdapter(this, chatItems);
+
+            // Настраиваем RecyclerView
+            recyclerViewMyChats.setLayoutManager(new LinearLayoutManager(this));
+            recyclerViewMyChats.setAdapter(sqLiteDataAdapter);
+
+            DatabaseReference myRefChats = database.getReference("Chats");
+
+            String Username = getIntent().getStringExtra("Username");
+
+            recyclerViewMyChats.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
+
+                @Override
+                public void onTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
+                }
+
+                @Override
+                public boolean onInterceptTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
+                    View childView = recyclerViewMyChats.findChildViewUnder(e.getX(), e.getY());
+                    if (childView != null) {
+                        int positionOfMyChats = recyclerViewMyChats.getChildAdapterPosition(childView);
+                        int itemIndexForMyChats = SQLiteDataAdapter.getItemIndexForMyChats(positionOfMyChats);
+
+                        LetsChat(String.valueOf(SQLiteDataAdapter.getItemPozInMyChats(itemIndexForMyChats).getChatName()), myRefChats, Username);
+
+//                    Toast.makeText(Chats_list.this, String.valueOf(dataAdapter.chats.get(itemIndex)), Toast.LENGTH_SHORT).show();
+                    }
+                    return false;
+                }
+
+                @Override
+                public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
+
+                }
+            });
+
+
+
+
+
+
+        }
+
+    }
+
 
 
     public void intent(String chatName, String Username){

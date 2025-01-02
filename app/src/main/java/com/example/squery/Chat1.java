@@ -59,8 +59,9 @@ import java.util.Objects;
 public class Chat1 extends AppCompatActivity {
 
     TextView chatname_title_of_chat, username_title_of_chat;
-    ConstraintLayout btnSendMess, btnDelAll, bottomPanel;
+    ConstraintLayout btnSendMess, btnDelAll, bottomPanel, btnAddToMyChat;
     EditText editTextMess;
+    DBHelper dbHelper;
     RecyclerView mMessagesRecycler;
     public int keyboardHeight = 0;
 
@@ -74,11 +75,19 @@ public class Chat1 extends AppCompatActivity {
         chatname_title_of_chat = findViewById(R.id.chatname_title_of_chat);
         username_title_of_chat = findViewById(R.id.username_title_of_chat);
         btnDelAll = findViewById(R.id.btn_delete_all);
+        btnAddToMyChat = findViewById(R.id.btn_add_to_my_chats);
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("ChatsWithMess/" + getIntent().getStringExtra("Chatname"));
 
         DatabaseReference myRefChats = database.getReference("Chats/" + getIntent().getStringExtra("Chatname"));
+
+        btnAddToMyChat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                saveChat(chatname_title_of_chat.getText().toString());
+            }
+        });
 
         btnDelAll.setOnClickListener(new View.OnClickListener() {
             @SuppressLint("UnsafeIntentLaunch")
@@ -173,6 +182,12 @@ public class Chat1 extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void saveChat(String chatName) {
+        dbHelper = new DBHelper(this);
+        dbHelper.addChat(chatName);
+        Toast.makeText(this, "Чат закреплён", Toast.LENGTH_SHORT).show();
     }
 
     private void hideKeyboard() {
