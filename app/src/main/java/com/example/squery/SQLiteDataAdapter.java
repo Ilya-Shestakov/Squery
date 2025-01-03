@@ -60,4 +60,12 @@ public class SQLiteDataAdapter extends RecyclerView.Adapter<SQLiteDataAdapter.Vi
         return position; // В этом случае индекс равен позиции в RecyclerView
     }
 
+    // Метод для получения элемента по индексу
+    public ChatItem getItem(int position) {
+        if (position >= 0 && position < chatItems.size()) {
+            return chatItems.get(position);
+        }
+        return null; // Или можно выбросить исключение IllegalArgumentException
+    }
+
 }

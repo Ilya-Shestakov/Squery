@@ -1,6 +1,8 @@
 package com.example.squery;
 
 
+import static com.example.squery.SQLiteDataAdapter.chatItems;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -92,7 +94,5 @@ public class DBHelper extends SQLiteOpenHelper {
         db.close();
         return count > 0; // Возвращает true, если чат существует
     }
-
-
 }
 

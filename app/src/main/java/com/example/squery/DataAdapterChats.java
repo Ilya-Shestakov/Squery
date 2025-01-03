@@ -49,8 +49,16 @@ public class DataAdapterChats extends RecyclerView.Adapter<ViewHolderChats> {
         notifyDataSetChanged();
     }
 
-    public int getItemIndex(int position) {
+    public static int getItemIndexFind(int position) {
         return position; // В этом случае индекс равен позиции в RecyclerView
+    }
+
+    // Метод для получения элемента по индексу
+    public String getItemChatsFind(int position) {
+        if (position >= 0 && position < filteredChats.size()) {
+            return filteredChats.get(position);
+        }
+        return null; // Или можно выбросить исключение IllegalArgumentException
     }
 
 }

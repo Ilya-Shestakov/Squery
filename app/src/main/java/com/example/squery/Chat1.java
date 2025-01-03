@@ -65,6 +65,7 @@ public class Chat1 extends AppCompatActivity {
     RecyclerView mMessagesRecycler;
     public int keyboardHeight = 0;
 
+
     ArrayList<String> messages = new ArrayList<>();
 
     @Override
