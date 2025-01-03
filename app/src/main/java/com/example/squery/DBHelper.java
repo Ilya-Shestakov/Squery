@@ -79,5 +79,20 @@ public class DBHelper extends SQLiteOpenHelper {
         return rowsAffected > 0; // Возвращает true, если удаление прошло успешно
     }
 
+
+    public boolean chatExists(String chatName) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT COUNT(*) FROM " + TABLE_CHATS + " WHERE " + KEY_CHAT_NAME + " = ?";
+        Cursor cursor = db.rawQuery(query, new String[]{chatName});
+        int count = 0;
+        if (cursor.moveToFirst()) {
+            count = cursor.getInt(0);
+        }
+        cursor.close();
+        db.close();
+        return count > 0; // Возвращает true, если чат существует
+    }
+
+
 }
 

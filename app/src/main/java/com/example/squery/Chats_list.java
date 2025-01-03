@@ -15,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -49,6 +50,9 @@ public class Chats_list extends AppCompatActivity {
     EditText editTextChatName, editTextChatPass, editTextCheckPass, searchEditText;
     DataAdapterChats dataAdapter;
 
+    static final int DOUBLE_BACK_PRESS_DELAY = 2000; // Время в миллисекундах
+    long lastBackPressedTime = 0;
+
     FirebaseDatabase database = FirebaseDatabase.getInstance();
 
     ArrayList<String> chats = new ArrayList<>();
@@ -62,6 +66,14 @@ public class Chats_list extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_chats_list);
+
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                handleBackButtonPress();
+            }
+        };
+        getOnBackPressedDispatcher().addCallback(this, callback);
 
         welcomeChat = new Dialog(Chats_list.this);
         findChat = new Dialog(Chats_list.this);
@@ -146,7 +158,41 @@ public class Chats_list extends AppCompatActivity {
 
 
 
+    //                                      CALLBACK
+
+
+
+    private void handleBackButtonPress() {
+        if (System.currentTimeMillis() - lastBackPressedTime > DOUBLE_BACK_PRESS_DELAY) {
+            Toast.makeText(this, "Нажмите ещё раз для выхода из аккаунта", Toast.LENGTH_SHORT).show();
+            lastBackPressedTime = System.currentTimeMillis();
+        } else {
+            AuthHelper authHelper = new AuthHelper(this);
+
+            authHelper.logout();
+            startActivity(new Intent(this, MainActivity.class));
+            finish();// Выход
+
+            toast("Вы вышли из учётной записи");
+        }
+    }
+
+
+
+
     //                                                          ENTRY TO CHAT
+
+
+
+
+    public void LetsChatOfPin(String chatname, String username){
+        intent(chatname, username);
+    }
+
+
+
+
+
 
 
     private void LetsChat(String chatname, DatabaseReference myRefChats, String username_title_of_chats_list_from_chat) {
@@ -443,11 +489,6 @@ public class Chats_list extends AppCompatActivity {
                             // Пользователь с таким именем уже существует
                             toast("Такой чат уже существует");
                         } else {
-
-                            if (editTextChatName.getText().toString().indexOf("Илья") != -1){
-                                toast("Тима иди в хер, люблю тебя)");
-                            }
-                            else{
                                 // Пользователя с таким именем не существует, можно создавать
                                 if ((editTextChatPass.getText().toString().length()) <= 5){
                                     toast("Пароль ненадёжный");
@@ -466,7 +507,6 @@ public class Chats_list extends AppCompatActivity {
                                     toast("Пароль: " + editTextChatPass.getText().toString());
 
                                 }
-                            }
                         }
                     }
 
@@ -487,7 +527,16 @@ public class Chats_list extends AppCompatActivity {
 
 
 
-//                                                  MY_CHATS
+
+
+
+//                                                     MY_CHATS
+
+
+
+
+
+
 
 
     public void method_my_chats(View view){
@@ -530,8 +579,7 @@ public class Chats_list extends AppCompatActivity {
                         int positionOfMyChats = recyclerViewMyChats.getChildAdapterPosition(childView);
                         int itemIndexForMyChats = SQLiteDataAdapter.getItemIndexForMyChats(positionOfMyChats);
 
-                        LetsChat(String.valueOf(SQLiteDataAdapter.getItemPozInMyChats(itemIndexForMyChats).getChatName()), myRefChats, Username);
-
+                        LetsChatOfPin(String.valueOf(SQLiteDataAdapter.getItemPozInMyChats(itemIndexForMyChats).getChatName()), Username);
 //                    Toast.makeText(Chats_list.this, String.valueOf(dataAdapter.chats.get(itemIndex)), Toast.LENGTH_SHORT).show();
                     }
                     return false;
@@ -542,12 +590,6 @@ public class Chats_list extends AppCompatActivity {
 
                 }
             });
-
-
-
-
-
-
         }
 
     }
@@ -572,15 +614,11 @@ public class Chats_list extends AppCompatActivity {
 
 
 
-    @Override
-    public void onBackPressed() {
-
-        AuthHelper authHelper = new AuthHelper(this);
-
-        authHelper.logout();
-        startActivity(new Intent(this, MainActivity.class));
-        finish();
-
-        super.onBackPressed();
-    }
+//    @Override
+//    public void onBackPressed() {
+//
+//        toast("Нажмите ещё раз что бы выйти из аккаунта");
+//
+//        super.onBackPressed();
+//    }
 }

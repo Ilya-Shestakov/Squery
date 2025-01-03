@@ -17,6 +17,9 @@
         android:theme="@style/Theme.Squery"
         tools:targetApi="31">
         <activity
+            android:name=".LetsChatOfPic"
+            android:exported="false" />
+        <activity
             android:name=".my_chats"
             android:exported="false" />
         <activity
@@ -51,7 +54,7 @@
             android:exported="false" />
         <activity
             android:name=".MainActivity"
-            android:exported="false"></activity>
+            android:exported="false" />
 
         <meta-data
             android:name="preloaded_fonts"

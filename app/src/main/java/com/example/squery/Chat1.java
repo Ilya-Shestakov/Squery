@@ -186,8 +186,16 @@ public class Chat1 extends AppCompatActivity {
 
     private void saveChat(String chatName) {
         dbHelper = new DBHelper(this);
-        dbHelper.addChat(chatName);
-        Toast.makeText(this, "Чат закреплён", Toast.LENGTH_SHORT).show();
+
+        if (!dbHelper.chatExists(chatName)){
+            // Выполняйте действия, если чата нет в базе
+            dbHelper.addChat(chatName);
+            Toast.makeText(this, "Чат закреплён", Toast.LENGTH_SHORT).show();
+            // Ваш код для создания или добавления
+        } else {
+            // Выводите сообщение если такой чат есть
+            Toast.makeText(this, "Чат с названием " + chatName + " уже закреплён", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void hideKeyboard() {
