@@ -1,5 +1,8 @@
 package com.example.squery;
 
+import static androidx.core.content.ContextCompat.startActivity;
+import static com.example.squery.SQLiteDataAdapter.chatItems;
+
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -44,7 +47,7 @@ import java.util.Objects;
 public class Chats_list extends AppCompatActivity {
 
     RecyclerView recycler_view_in_chats_list, recyclerViewMyChats;
-    DBHelper dbHelper;
+//    DBHelper dbHelper;
     SQLiteDataAdapter sqLiteDataAdapter;
     TextView username_title_of_chats_list, titleWelcomeChat;
     ConstraintLayout btn_add_chat, btn_create_chat, btn_welcome_chat, btn_delete_chat, btn_find_chat_in_wind;
@@ -68,9 +71,12 @@ public class Chats_list extends AppCompatActivity {
 
     ArrayList<String> chats = new ArrayList<>();
 
+    ArrayList<ChatItem> MyChats = new ArrayList<>();
+
+
     DatabaseReference myRefChats = database.getReference("Chats");
 
-    public Dialog createChat, welcomeChat, findChat, myChats;
+    public Dialog createChat, welcomeChat, findChat, myChatsDial;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,7 +95,7 @@ public class Chats_list extends AppCompatActivity {
         welcomeChat = new Dialog(Chats_list.this);
         findChat = new Dialog(Chats_list.this);
         createChat = new Dialog(Chats_list.this);
-        myChats = new Dialog(Chats_list.this);
+        myChatsDial = new Dialog(Chats_list.this);
 
         btn_add_chat = findViewById(R.id.btn_add_chat);
         username_title_of_chats_list = findViewById(R.id.username_title_of_chats_list);
@@ -349,7 +355,7 @@ public class Chats_list extends AppCompatActivity {
 
 
     public void deleteChat(DatabaseReference chatsRef, String targetValue, String chatName){
-        DBHelper dbHelper = new DBHelper(this);
+//        DBHelper dbHelper = new DBHelper(this);
 
         Query query = chatsRef.orderByValue().equalTo(targetValue);
         query.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -371,7 +377,7 @@ public class Chats_list extends AppCompatActivity {
                             }
                         });
 
-                        dbHelper.deleteChatByName(chatName);
+//                        dbHelper.deleteChatByName(chatName);
 
                     }
                 } else {
@@ -494,6 +500,13 @@ public class Chats_list extends AppCompatActivity {
 
 
 
+
+
+
+
+
+
+
     //                                                         CREATE CHAT
 
 
@@ -572,27 +585,50 @@ public class Chats_list extends AppCompatActivity {
 
 
 
+
     public void method_my_chats(View view){
 
-        myChats.setContentView(R.layout.activity_my_chats);
-        myChats.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        String username = String.valueOf(findViewById(R.id.username_title_of_chats_list));
+
+        myChatsDial.setContentView(R.layout.activity_my_chats);
+        myChatsDial.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        List<ChatItem> chatItems1 = new ArrayList<>();
+
+        DatabaseReference myRefMyChats = database.getReference("PinnedChats/shvi");
+
+        ChatItemAdapter adapter = new ChatItemAdapter(chatItems1);
+
+        recyclerViewMyChats = myChatsDial.findViewById(R.id.recyclerViewMyChats);
+
+        recyclerViewMyChats.setLayoutManager(new LinearLayoutManager(this));
+        recyclerViewMyChats.setAdapter(adapter);
+
+        myRefMyChats.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                chatItems1.clear();
+                for (DataSnapshot chatSnapshot : snapshot.getChildren()) {
+                    String chatName = chatSnapshot.getValue(String.class); // Получаем значение как String
+                    if(chatName != null){
+                        ChatItem chatItem2 = new ChatItem(chatName); // Создаём объект с id и значением
+                        chatItems1.add(chatItem2);
+                    }
+
+
+                }
+                adapter.setChatItems(chatItems1);
+            }
+
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                // Обработка ошибки
+            }
+        });
 
 
         if(!isMyChatsInitialized){
-            recyclerViewMyChats = myChats.findViewById(R.id.recyclerViewMyChats);
-            dbHelper = new DBHelper(this);
-
-
-
-            // Получаем данные из базы данных
-            List<ChatItem> chatItems = dbHelper.getAllChats();
-
-            // Создаем адаптер
-            sqLiteDataAdapter = new SQLiteDataAdapter(this, chatItems);
-
-            // Настраиваем RecyclerView
-            recyclerViewMyChats.setLayoutManager(new LinearLayoutManager(this));
-            recyclerViewMyChats.setAdapter(sqLiteDataAdapter);
 
             String Username = getIntent().getStringExtra("Username");
 
@@ -603,9 +639,9 @@ public class Chats_list extends AppCompatActivity {
                     if (childView != null) {
                         int positionOfMyChats = rv.getChildAdapterPosition(childView);
                         long currentTime = SystemClock.elapsedRealtime();
-                        ChatItem item = sqLiteDataAdapter.getItem(positionOfMyChats);
+                        ChatItem item = adapter.getItemAdapter(positionOfMyChats);
 
-                        if (e.getActionMasked() == MotionEvent.ACTION_UP) { // Добавлена проверка на ACTION_UP
+                        if (e.getActionMasked() == MotionEvent.ACTION_UP) {
                             if (positionOfMyChats == lastClickPosition && currentTime - lastClickTime <= DOUBLE_CLICK_INTERVAL) {
                                 if (item != null) {
                                     LetsChatOfPin(item.getChatName(), Username);
@@ -618,23 +654,86 @@ public class Chats_list extends AppCompatActivity {
                             } else {
                                 lastClickTime = currentTime;
                                 lastClickPosition = positionOfMyChats;
-                                toast("Нажмите ещё раз что бы зайти в чат");
+                                toast("Нажимте ещё раз что бы зайти в чат");
                             }
                             return false;
                         }
                     }
                     return false;
                 }
+
                 @Override
                 public void onTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {}
                 @Override
                 public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {}
             });
-
             isMyChatsInitialized = true;
         }
+        myChatsDial.show();
+    }
 
-        myChats.show();
+
+//        myChats.setContentView(R.layout.activity_my_chats);
+//        myChats.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+//
+//
+//        if(!isMyChatsInitialized){
+//            recyclerViewMyChats = myChats.findViewById(R.id.recyclerViewMyChats);
+//            dbHelper = new DBHelper(this);
+//
+//
+//
+//            // Получаем данные из базы данных
+//            List<ChatItem> chatItems = dbHelper.getAllChats();
+//
+//            // Создаем адаптер
+//            sqLiteDataAdapter = new SQLiteDataAdapter(this, chatItems);
+//
+//            // Настраиваем RecyclerView
+//            recyclerViewMyChats.setLayoutManager(new LinearLayoutManager(this));
+//            recyclerViewMyChats.setAdapter(sqLiteDataAdapter);
+//
+//            String Username = getIntent().getStringExtra("Username");
+//
+//            recyclerViewMyChats.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
+//                @Override
+//                public boolean onInterceptTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
+//                    View childView = rv.findChildViewUnder(e.getX(), e.getY());
+//                    if (childView != null) {
+//                        int positionOfMyChats = rv.getChildAdapterPosition(childView);
+//                        long currentTime = SystemClock.elapsedRealtime();
+//                        ChatItem item = sqLiteDataAdapter.getItem(positionOfMyChats);
+//
+//                        if (e.getActionMasked() == MotionEvent.ACTION_UP) { // Добавлена проверка на ACTION_UP
+//                            if (positionOfMyChats == lastClickPosition && currentTime - lastClickTime <= DOUBLE_CLICK_INTERVAL) {
+//                                if (item != null) {
+//                                    LetsChatOfPin(item.getChatName(), Username);
+//                                    lastClickTime = 0;
+//                                    lastClickPosition = -1;
+//                                    return false;
+//                                } else {
+//                                    Toast.makeText(Chats_list.this, "Не удалось войти в чат", Toast.LENGTH_SHORT).show();
+//                                }
+//                            } else {
+//                                lastClickTime = currentTime;
+//                                lastClickPosition = positionOfMyChats;
+//                                toast("Нажмите ещё раз что бы зайти в чат");
+//                            }
+//                            return false;
+//                        }
+//                    }
+//                    return false;
+//                }
+//                @Override
+//                public void onTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {}
+//                @Override
+//                public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {}
+//            });
+//
+//            isMyChatsInitialized = true;
+//        }
+//
+//        myChats.show();
 
 
 //
@@ -699,8 +798,6 @@ public class Chats_list extends AppCompatActivity {
 //                }
 //            });
 
-
-    }
 
 
 

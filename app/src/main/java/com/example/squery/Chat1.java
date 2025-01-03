@@ -61,7 +61,8 @@ public class Chat1 extends AppCompatActivity {
     TextView chatname_title_of_chat, username_title_of_chat;
     ConstraintLayout btnSendMess, btnDelAll, bottomPanel, btnAddToMyChat;
     EditText editTextMess;
-    DBHelper dbHelper;
+    FirebaseDatabase database = FirebaseDatabase.getInstance();
+//    DBHelper dbHelper;
     RecyclerView mMessagesRecycler;
     public int keyboardHeight = 0;
 
@@ -86,7 +87,7 @@ public class Chat1 extends AppCompatActivity {
         btnAddToMyChat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                saveChat(chatname_title_of_chat.getText().toString());
+                saveChat(chatname_title_of_chat.getText().toString(), username_title_of_chat.getText().toString());
             }
         });
 
@@ -185,18 +186,24 @@ public class Chat1 extends AppCompatActivity {
 
     }
 
-    private void saveChat(String chatName) {
-        dbHelper = new DBHelper(this);
+    private void saveChat(String chatName, String userName) {
 
-        if (!dbHelper.chatExists(chatName)){
-            // Выполняйте действия, если чата нет в базе
-            dbHelper.addChat(chatName);
-            Toast.makeText(this, "Чат закреплён", Toast.LENGTH_SHORT).show();
-            // Ваш код для создания или добавления
-        } else {
-            // Выводите сообщение если такой чат есть
-            Toast.makeText(this, "Чат с названием " + chatName + " уже закреплён", Toast.LENGTH_SHORT).show();
-        }
+        DatabaseReference myRefPasswords = database.getReference("PinnedChats/" + userName);
+
+        myRefPasswords.push().setValue(chatName);
+
+
+//        dbHelper = new DBHelper(this);
+//
+//        if (!dbHelper.chatExists(chatName)){
+//            // Выполняйте действия, если чата нет в базе
+//            dbHelper.addChat(chatName);
+//            Toast.makeText(this, "Чат закреплён", Toast.LENGTH_SHORT).show();
+//            // Ваш код для создания или добавления
+//        } else {
+//            // Выводите сообщение если такой чат есть
+//            Toast.makeText(this, "Чат с названием " + chatName + " уже закреплён", Toast.LENGTH_SHORT).show();
+//        }
     }
 
     private void hideKeyboard() {
