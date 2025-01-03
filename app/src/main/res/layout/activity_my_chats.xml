@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:paddingHorizontal="15dp"
+    android:paddingVertical="8dp"
+    android:layout_height="270dp"
+    android:layout_width="300dp"
+    android:background="@drawable/btn_from_reg_and_log"
+    android:layout_gravity="center"
+    tools:context=".my_chats">
+
+    <ImageView
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/baseline_push_pin_24"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:elevation="5dp"
+        android:rotation="45"
+        />
+
+<!--    <ScrollView-->
+<!--        android:id="@+id/scrollMyChats"-->
+
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="0dp"-->
+
+<!--        android:scrollbars="vertical"-->
+<!--        android:fadeScrollbars="false"-->
+<!--        android:scrollbarSize="7dp"-->
+<!--        android:scrollbarThumbVertical="@drawable/scroll_bar"-->
+<!--        android:scrollbarStyle="insideOverlay"-->
+<!--        tools:ignore="MissingConstraints"-->
+
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        >-->
+
+<!--        <androidx.recyclerview.widget.RecyclerView-->
+<!--            android:id="@+id/recyclerViewMyChats"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginTop="10dp"-->
+<!--            android:layout_marginEnd="10dp"-->
+<!--            />-->
+
+<!--    </ScrollView>-->
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewMyChats"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:fadeScrollbars="false"
+        android:scrollbarSize="7dp"
+        android:scrollbarThumbVertical="@drawable/scroll_bar"
+        android:scrollbarStyle="insideOverlay"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="50dp"
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

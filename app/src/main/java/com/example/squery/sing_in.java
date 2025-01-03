@@ -129,7 +129,7 @@ public class sing_in extends AppCompatActivity {
                                                 refUser.updateChildren(userHashMap)
                                                         .addOnCompleteListener(task1 -> {
                                                             if (task1.isSuccessful()) {
-                                                                toast("Пользователь успешно зарегистрирован!");
+//                                                                toast("Пользователь успешно зарегистрирован!");
                                                                 intent();
                                                             }
                                                         });
@@ -172,5 +172,4 @@ public class sing_in extends AppCompatActivity {
     public void toast(String text){
         Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
     }
-
 }

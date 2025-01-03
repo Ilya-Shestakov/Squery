@@ -50,7 +50,7 @@ public class Chats_list extends AppCompatActivity {
 //    DBHelper dbHelper;
     SQLiteDataAdapter sqLiteDataAdapter;
     TextView username_title_of_chats_list, titleWelcomeChat;
-    ConstraintLayout btn_add_chat, btn_create_chat, btn_welcome_chat, btn_delete_chat, btn_find_chat_in_wind;
+    ConstraintLayout btn_add_chat, btn_create_chat, btn_welcome_chat, btn_delete_chat, btn_find_chat_in_wind, btn_my_chats;
     EditText editTextChatName, editTextChatPass, editTextCheckPass, searchEditText;
     DataAdapterChats dataAdapter;
 
@@ -71,10 +71,11 @@ public class Chats_list extends AppCompatActivity {
 
     ArrayList<String> chats = new ArrayList<>();
 
-    ArrayList<ChatItem> MyChats = new ArrayList<>();
+//    ArrayList<ChatItem> MyChats = new ArrayList<>();
 
 
     DatabaseReference myRefChats = database.getReference("Chats");
+    DatabaseReference mySavedChatsRef = database.getReference("PinnedChats");
 
     public Dialog createChat, welcomeChat, findChat, myChatsDial;
 
@@ -100,6 +101,15 @@ public class Chats_list extends AppCompatActivity {
         btn_add_chat = findViewById(R.id.btn_add_chat);
         username_title_of_chats_list = findViewById(R.id.username_title_of_chats_list);
         recycler_view_in_chats_list = findViewById(R.id.recycler_view_in_chats_list);
+
+        btn_my_chats = findViewById(R.id.btn_my_chats);
+
+        btn_my_chats.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                method_my_chats_from_btn(username_title_of_chats_list.getText().toString());
+            }
+        });
 
         chats = getChatTitles();
 
@@ -139,29 +149,30 @@ public class Chats_list extends AppCompatActivity {
 
                     int position = recycler_view_in_chats_list.getChildAdapterPosition(childView);
                     int itemIndex = DataAdapterChats.getItemIndexFind(position);
-                    long currentTimeFindChats = SystemClock.elapsedRealtime();
+//                    long currentTimeFindChats = SystemClock.elapsedRealtime();
 
-                    if (e.getActionMasked() == MotionEvent.ACTION_UP) { // Добавлена проверка на ACTION_UP
-                        if (position == lastClickPositionFind && currentTimeFindChats - lastClickTimeFind <= DOUBLE_CLICK_INTERVAL_FOR_FIND) {
+//                    if (e.getActionMasked() == MotionEvent.ACTION_UP) { // Добавлена проверка на ACTION_UP
+//                        if (position == lastClickPositionFind && currentTimeFindChats - lastClickTimeFind <= DOUBLE_CLICK_INTERVAL_FOR_FIND) {
 //                            if (itemIndex != 0) {
-                                LetsChat(String.valueOf(dataAdapter.filteredChats.get(itemIndex)), myRefChats, Username);
-                                lastClickTimeFind = 0;
-                                lastClickPositionFind = -1;
-                                toast("вошёл");
-                                return false;
+                    LetsChat(String.valueOf(dataAdapter.filteredChats.get(itemIndex)), myRefChats, Username, mySavedChatsRef);
+//                                lastClickTimeFind = 0;
+//                                lastClickPositionFind = -1;
+//                                toast("вошёл");
+//                                return false;
 //                            } else {
 //                                Toast.makeText(Chats_list.this, "Не удалось войти в чат", Toast.LENGTH_SHORT).show();
 //                            }
-                        } else {
-                            lastClickTimeFind = currentTimeFindChats;
-                            lastClickPositionFind = itemIndex;
-                            toast("Нажимте ещё раз что бы зайти в чат");
-                        }
-                        return false;
-                    }
+//                        } else {
+//                            lastClickTimeFind = currentTimeFindChats;
+//                            lastClickPositionFind = itemIndex;
+//                            toast("Нажимте ещё раз что бы зайти в чат");
+//                        }
+//                        return false;
+                }
 
 //                    Toast.makeText(Chats_list.this, String.valueOf(dataAdapter.chats.get(itemIndex)), Toast.LENGTH_SHORT).show();
-                }
+//                }
+//                return false;
                 return false;
             }
 
@@ -235,7 +246,7 @@ public class Chats_list extends AppCompatActivity {
 
 
 
-    private void LetsChat(String chatname, DatabaseReference myRefChats, String username_title_of_chats_list_from_chat) {
+    private void LetsChat(String chatname, DatabaseReference myRefChats, String username_title_of_chats_list_from_chat, DatabaseReference mySavedChatsRef) {
 
         welcomeChat.setContentView(R.layout.activity_in_the_chat);
         welcomeChat.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -342,7 +353,7 @@ public class Chats_list extends AppCompatActivity {
                 FirebasePasswordRemover removerPass = new FirebasePasswordRemover();
                 removerPass.deletePasswordChat(chatname);
 
-                deleteChat(myRefChats, chatname, chatname);
+                deleteChat(myRefChats, mySavedChatsRef, chatname, username_title_of_chats_list_from_chat);
 
 //                Objects.requireNonNull(myRefChats.child(titleWelcomeChat.toString()).getKey())
 
@@ -354,8 +365,62 @@ public class Chats_list extends AppCompatActivity {
     }
 
 
-    public void deleteChat(DatabaseReference chatsRef, String targetValue, String chatName){
+    public void deleteChat(DatabaseReference chatsRef, DatabaseReference MySavedChatRef, String targetValue, String username){
 //        DBHelper dbHelper = new DBHelper(this);
+
+
+        MySavedChatRef.child(username).removeValue();
+
+
+//        MySavedChatsRef.child(key).removeValue(new DatabaseReference.CompletionListener() {
+//            @Override
+//            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+//                if (databaseError == null) {
+//                    System.out.println("Data with key '" + key + "' successfully deleted");
+//                } else {
+//                    System.err.println("Error deleting data: " + databaseError.getMessage());
+//                }
+//            }
+//        });
+
+//        Query querySaved = MySavedChatRef.orderByValue().equalTo(username);
+//        querySaved.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                if (dataSnapshot.exists()) {
+//                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+//                        String key = snapshot.getKey();
+//
+//                        // Правильный код с использованием CompletionListener
+//                        MySavedChatRef.child(username).removeValue(new DatabaseReference.CompletionListener() {
+//                            @Override
+//                            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+//                                if (databaseError == null) {
+//                                    System.out.println("Data with key '" + key + "' successfully deleted");
+//                                } else {
+//                                    System.err.println("Error deleting data: " + databaseError.getMessage());
+//                                }
+//                            }
+//                        });
+//
+////                        dbHelper.deleteChatByName(chatName);
+//
+//                    }
+//                } else {
+//                    System.out.println("No data found with the value: " + targetValue);
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//                System.err.println("Query cancelled: " + databaseError.getMessage());
+//            }
+//        });
+
+
+
+
+
 
         Query query = chatsRef.orderByValue().equalTo(targetValue);
         query.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -448,7 +513,7 @@ public class Chats_list extends AppCompatActivity {
         if (filteredList.size() == 1) {
             dataAdapter.updateList(filteredList);
         } else {
-            toast("Введите более точное название");
+            toast("Чат не найден");
         }
     }
 
@@ -586,16 +651,16 @@ public class Chats_list extends AppCompatActivity {
 
 
 
-    public void method_my_chats(View view){
+    public void method_my_chats_from_btn(String username){
 
-        String username = String.valueOf(findViewById(R.id.username_title_of_chats_list));
+//        toast(username);
 
         myChatsDial.setContentView(R.layout.activity_my_chats);
         myChatsDial.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
         List<ChatItem> chatItems1 = new ArrayList<>();
 
-        DatabaseReference myRefMyChats = database.getReference("PinnedChats/shvi");
+        DatabaseReference myRefMyChats = database.getReference("PinnedChats/" + username);
 
         ChatItemAdapter adapter = new ChatItemAdapter(chatItems1);
 

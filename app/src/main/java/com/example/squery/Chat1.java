@@ -52,6 +52,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -65,7 +66,6 @@ public class Chat1 extends AppCompatActivity {
 //    DBHelper dbHelper;
     RecyclerView mMessagesRecycler;
     public int keyboardHeight = 0;
-
 
     ArrayList<String> messages = new ArrayList<>();
 
@@ -188,22 +188,38 @@ public class Chat1 extends AppCompatActivity {
 
     private void saveChat(String chatName, String userName) {
 
-        DatabaseReference myRefPasswords = database.getReference("PinnedChats/" + userName);
-
-        myRefPasswords.push().setValue(chatName);
-
-
-//        dbHelper = new DBHelper(this);
+//        DatabaseReference myRefPasswords = database.getReference("PinnedChats/" + userName);
 //
-//        if (!dbHelper.chatExists(chatName)){
-//            // Выполняйте действия, если чата нет в базе
-//            dbHelper.addChat(chatName);
-//            Toast.makeText(this, "Чат закреплён", Toast.LENGTH_SHORT).show();
-//            // Ваш код для создания или добавления
-//        } else {
-//            // Выводите сообщение если такой чат есть
-//            Toast.makeText(this, "Чат с названием " + chatName + " уже закреплён", Toast.LENGTH_SHORT).show();
-//        }
+//        myRefPasswords.push().setValue(chatName);
+
+        DatabaseReference parentRef = database.getReference("PinnedChats");
+        parentRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                DataSnapshot childSnapshot = snapshot.child(userName);
+                boolean exists = childSnapshot.exists();
+
+                DatabaseReference myRefPasswords = database.getReference("PinnedChats/" + userName);
+                if (exists) {
+                    // Если подкаталога нет - создаем и записываем значение
+                    toast("Чат уже закреплён");
+                } else {
+                    myRefPasswords.push().setValue(chatName);
+                    toast("Чат закреплён");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                toast("System Error");
+            }
+        });
+
+
+
+
+
+
     }
 
     private void hideKeyboard() {
@@ -249,6 +265,8 @@ public class Chat1 extends AppCompatActivity {
         finish();
     }
 
-
+    public void toast(String text){
+        Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
+    }
 
 }

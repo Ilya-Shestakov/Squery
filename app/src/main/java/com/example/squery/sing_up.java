@@ -114,7 +114,7 @@ public class sing_up extends AppCompatActivity {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                System.err.println("Ошибка доступа к базе данных: " + databaseError.getMessage());
+                System.err.println("Ошибка доступа: " + databaseError.getMessage());
             }
         });
     }
@@ -134,7 +134,7 @@ public class sing_up extends AppCompatActivity {
                     if (storedHashedPassword != null) {
                         boolean passwordMatches = verifyHashedPassword(passwordEditText, storedHashedPassword);
                         if (passwordMatches) {
-                            Toast.makeText(sing_up.this, "Пароль верный", Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(sing_up.this, "Пароль верный", Toast.LENGTH_SHORT).show();
                             intent(username);
                         } else {
                             Toast.makeText(sing_up.this, "Пароль неверный, попробуйте ещё раз", Toast.LENGTH_SHORT).show();
@@ -148,7 +148,7 @@ public class sing_up extends AppCompatActivity {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                System.err.println("Ошибка доступа к базе данных: " + databaseError.getMessage());
+                System.err.println("Ошибка доступа: " + databaseError.getMessage());
             }
         });
     }
