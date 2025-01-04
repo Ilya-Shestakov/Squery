@@ -80,43 +80,23 @@
             />
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/btn_delete_all"
+            android:id="@+id/btn_show_sett"
 
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:paddingVertical="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             android:text="Delete"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/title_with_username"
+            app:layout_constraintBottom_toBottomOf="@+id/title_with_username"
+            android:elevation="20dp"
             android:layout_marginEnd="10dp"
             >
 
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:src="@drawable/baseline_clear_24"
-                />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/btn_add_to_my_chats"
-
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:paddingVertical="10dp"
-            app:layout_constraintEnd_toStartOf="@+id/btn_delete_all"
-            android:text="Delete"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginEnd="10dp"
-            >
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:src="@drawable/baseline_move_down_24"
+                android:src="@drawable/baseline_info_outline_24"
                 />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

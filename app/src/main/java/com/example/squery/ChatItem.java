@@ -4,7 +4,7 @@ public class ChatItem {
     private String chatName;
 
     public ChatItem() {
-        // Пустой конструктор обязателен для Firebase
+        // Обязательный конструктор без параметров для Firebase
     }
 
     public ChatItem(String chatName) {

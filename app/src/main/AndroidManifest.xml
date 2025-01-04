@@ -17,6 +17,9 @@
         android:theme="@style/Theme.Squery"
         tools:targetApi="31">
         <activity
+            android:name=".chatInfo"
+            android:exported="false" />
+        <activity
             android:name=".LetsChatOfPic"
             android:exported="false" />
         <activity

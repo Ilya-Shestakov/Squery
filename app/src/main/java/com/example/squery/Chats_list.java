@@ -330,7 +330,7 @@ public class Chats_list extends AppCompatActivity {
                 if (editTextCheckPass.getText().toString().equals(retPass[0].toString())){
 //                    Toast.makeText(Chats_list.this, "Correct Pass: "+retPass[0], Toast.LENGTH_SHORT).show();
 
-                    welcomeChatBeforeCheck(chatname, username_title_of_chats_list_from_chat);
+                    welcomeChatBeforeCheck(chatname, username_title_of_chats_list_from_chat, editTextCheckPass.getText().toString());
                 } else {
 //                    Toast.makeText(Chats_list.this, "Incorrect Pass" + retPass[0], Toast.LENGTH_SHORT).show();
 //                    Toast.makeText(Chats_list.this, "Incorrect password", Toast.LENGTH_SHORT).show();
@@ -458,10 +458,11 @@ public class Chats_list extends AppCompatActivity {
     }
 
 
-    private void welcomeChatBeforeCheck(String chatname, String username_to_chat) {
+    private void welcomeChatBeforeCheck(String chatname, String username_to_chat, String password) {
 
         Intent intent = new Intent(this, Chat1.class);
         intent.putExtra("Chatname", chatname);
+        intent.putExtra("Chatpass", password);
         intent.putExtra("Username_to_chat", username_to_chat);
         startActivity(intent);
         finish();
@@ -594,33 +595,38 @@ public class Chats_list extends AppCompatActivity {
                 DatabaseReference refChats = FirebaseDatabase.getInstance().getReference().child("Chats");
                 DatabaseReference refPass = FirebaseDatabase.getInstance().getReference().child("Passwords");
 
+                String chatName = editTextChatName.getText().toString().replace(".", "_");
 
-                // Проверяем, есть ли пользователь с таким именем
                 refPass.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        if (dataSnapshot.hasChild(editTextChatName.getText().toString())) {
-                            // Пользователь с таким именем уже существует
+                        if (dataSnapshot.hasChild(chatName)) {
                             toast("Такой чат уже существует");
                         } else {
-                                // Пользователя с таким именем не существует, можно создавать
+
+                            if (chatName.trim().isEmpty()){
+                                toast("Название чата не может быть пустым");
+                            }
+                            else{
                                 if ((editTextChatPass.getText().toString().length()) <= 5){
                                     toast("Пароль ненадёжный");
                                 } else {
-                                    DatabaseReference myRefPasswords = database.getReference("Passwords/" + editTextChatName.getText().toString());
+                                    DatabaseReference myRefPasswords = database.getReference("Passwords/" + chatName);
 
-                                    myRefChats.push().setValue(editTextChatName.getText().toString());
+                                    myRefChats.push().setValue(chatName);
                                     myRefPasswords.push().setValue(editTextChatPass.getText().toString());
 
                                     createChat.cancel();
 
                                     String Username = getIntent().getStringExtra("Username");
 
-                                    intent(editTextChatName.getText().toString(), Username);
+                                    intent(chatName, Username);
 
-                                    toast("Пароль: " + editTextChatPass.getText().toString());
+//                                    toast("Пароль: " + editTextChatPass.getText().toString());
 
                                 }
+                            }
+
                         }
                     }
 
@@ -674,23 +680,49 @@ public class Chats_list extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 chatItems1.clear();
                 for (DataSnapshot chatSnapshot : snapshot.getChildren()) {
-                    String chatName = chatSnapshot.getValue(String.class); // Получаем значение как String
-                    if(chatName != null){
+                    // Получаем имя каталога (ключа)
+                    String chatName = chatSnapshot.getKey();
+                    if (chatName != null) {
                         ChatItem chatItem2 = new ChatItem(chatName); // Создаём объект с id и значением
                         chatItems1.add(chatItem2);
+//                        Log.d("FirebaseData", "Chat added: " + chatName);
+                    } else {
+//                        Log.e("FirebaseData", "Failed to get Chat key from snapshot: " + chatSnapshot.toString());
                     }
-
-
                 }
                 adapter.setChatItems(chatItems1);
             }
 
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                // Обработка ошибки
+//                Log.e("FirebaseData", "Error loading data: " + error.getMessage());
             }
         });
+
+
+
+//        myRefMyChats.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                chatItems1.clear();
+//                for (DataSnapshot chatSnapshot : snapshot.getChildren()) {
+//                    String chatName = chatSnapshot.getValue(String.class); // Получаем значение как String
+//                    if(chatName != null){
+//                        ChatItem chatItem2 = new ChatItem(chatName); // Создаём объект с id и значением
+//                        chatItems1.add(chatItem2);
+//                    }
+//
+//
+//                }
+//                adapter.setChatItems(chatItems1);
+//            }
+//
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//                // Обработка ошибки
+//            }
+//        });
 
 
         if(!isMyChatsInitialized){

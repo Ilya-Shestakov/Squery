@@ -1,12 +1,15 @@
 package com.example.squery;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.graphics.Rect;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -60,9 +63,10 @@ import java.util.Objects;
 public class Chat1 extends AppCompatActivity {
 
     TextView chatname_title_of_chat, username_title_of_chat;
-    ConstraintLayout btnSendMess, btnDelAll, bottomPanel, btnAddToMyChat;
+    ConstraintLayout btnSendMess, bottomPanel, btn_show_sett, btn_add_to_my_chats_in_dial, btn_show_info_about_chat_in_dial, btn_clear_chat_in_dial;
     EditText editTextMess;
     FirebaseDatabase database = FirebaseDatabase.getInstance();
+    Dialog dialogInfo;
 //    DBHelper dbHelper;
     RecyclerView mMessagesRecycler;
     public int keyboardHeight = 0;
@@ -76,39 +80,46 @@ public class Chat1 extends AppCompatActivity {
 
         chatname_title_of_chat = findViewById(R.id.chatname_title_of_chat);
         username_title_of_chat = findViewById(R.id.username_title_of_chat);
-        btnDelAll = findViewById(R.id.btn_delete_all);
-        btnAddToMyChat = findViewById(R.id.btn_add_to_my_chats);
+
+        btn_show_sett = findViewById(R.id.btn_show_sett);
+
+        dialogInfo = new Dialog(this);
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("ChatsWithMess/" + getIntent().getStringExtra("Chatname"));
 
         DatabaseReference myRefChats = database.getReference("Chats/" + getIntent().getStringExtra("Chatname"));
 
-        btnAddToMyChat.setOnClickListener(new View.OnClickListener() {
+
+        String chatpass = getIntent().getStringExtra("Chatpass");
+        String chatname = getIntent().getStringExtra("Chatname");
+
+        final String[] chatPass = {""};
+
+        getSinglePassword(chatname, new OnPasswordReceivedListener() {
+            @Override
+            public void onPasswordReceived(String password) {
+                if(password != null){
+                    // Используем полученный пароль
+                    chatPass[0] = password;
+                } else {
+                    chatPass[0] = "";
+                }
+            }
+            @Override
+            public void onError(String errorMessage) {
+
+            }
+        });
+
+        btn_show_sett.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                saveChat(chatname_title_of_chat.getText().toString(), username_title_of_chat.getText().toString());
-            }
-        });
-
-        btnDelAll.setOnClickListener(new View.OnClickListener() {
-            @SuppressLint("UnsafeIntentLaunch")
-            @Override
-            public void onClick(View view) {
-
-                myRef.removeValue();
-
-                //myRefChats.child(username_title_of_chat.toString()).removeValue();
-
-//                Toast.makeText(Chat1.this, myRefChats.toString(), Toast.LENGTH_SHORT).show();
-
-                //backPressHand();
-                recreate();
+                method_add_to_my_chat(chatPass[0] ,myRef ,chatname_title_of_chat.getText().toString(), username_title_of_chat.getText().toString());
             }
         });
 
 
-        String chatname = getIntent().getStringExtra("Chatname");
 
         String username = getIntent().getStringExtra("Username_to_chat");
 
@@ -186,34 +197,178 @@ public class Chat1 extends AppCompatActivity {
 
     }
 
+
+
+    interface OnPasswordReceivedListener {
+        void onPasswordReceived(String password);
+        void onError(String errorMessage);
+    }
+
+
+    private void getSinglePassword(String chatname, final OnPasswordReceivedListener listener) {
+        DatabaseReference passwordsRef = database.getReference("Passwords/" + chatname);
+
+        passwordsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    for (DataSnapshot childSnapshot : snapshot.getChildren()) {
+                        if (childSnapshot.getValue() != null) {
+                            String password = childSnapshot.getValue(String.class);
+                            listener.onPasswordReceived(password);
+                            return;
+                        }
+                    }
+                }
+                listener.onPasswordReceived(null);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                listener.onError(error.getMessage());
+            }
+        });
+
+    }
+
+
+
+
+//    private String getSinglePassword(String chatname) {
+//        DatabaseReference passwordsRef = database.getReference("Passwords/" + chatname);
+//        final String[] chatpassFromDB = {null};
+//        passwordsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                if (snapshot.exists()) {
+//                    for (DataSnapshot childSnapshot : snapshot.getChildren()) {
+//                        if (childSnapshot.getValue() != null) {
+//                            toast("TEST");
+//                            chatpassFromDB[0] = childSnapshot.getValue(String.class);
+//                            break;
+//                        }
+//                    }
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//            }
+//
+//        });
+//
+//        return chatpassFromDB[0];
+//
+//    }
+
+
+
+
+
+
+
+
+
+    //                                                      SAVE CHAT
+
+
+
+
+
+
+    public void method_add_to_my_chat(String chatpass, DatabaseReference myRef, String chatname, String username)
+    {
+
+
+        dialogInfo.setContentView(R.layout.activity_chat_info);
+        dialogInfo.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        dialogInfo.show();
+
+        btn_add_to_my_chats_in_dial = dialogInfo.findViewById(R.id.btn_add_to_my_chats_in_dial);
+        btn_show_info_about_chat_in_dial = dialogInfo.findViewById(R.id.btn_show_info_about_chat_in_dial);
+        btn_clear_chat_in_dial = dialogInfo.findViewById(R.id.btn_clear_chat_in_dial);
+
+        btn_add_to_my_chats_in_dial.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                saveChat(chatname, username);
+                dialogInfo.cancel();
+            }
+        });
+
+        btn_clear_chat_in_dial.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                myRef.removeValue();
+                dialogInfo.cancel();
+                recreate();
+            }
+        });
+
+        btn_show_info_about_chat_in_dial.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toast("Название: " + chatname + "\n" + "Пароль: " + chatpass);
+
+            }
+        });
+
+    }
+
+
+
+
+
+
+
     private void saveChat(String chatName, String userName) {
 
 //        DatabaseReference myRefPasswords = database.getReference("PinnedChats/" + userName);
 //
 //        myRefPasswords.push().setValue(chatName);
 
-        DatabaseReference parentRef = database.getReference("PinnedChats");
-        parentRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                DataSnapshot childSnapshot = snapshot.child(userName);
-                boolean exists = childSnapshot.exists();
+        DatabaseReference myRefPasswords = database.getReference("PinnedChats/" + userName);
 
-                DatabaseReference myRefPasswords = database.getReference("PinnedChats/" + userName);
-                if (exists) {
-                    // Если подкаталога нет - создаем и записываем значение
+        myRefPasswords.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.hasChild(chatName)) {
                     toast("Чат уже закреплён");
                 } else {
-                    myRefPasswords.push().setValue(chatName);
+                    DatabaseReference helper = database.getReference("PinnedChats/" + userName + "/" + chatName);
+                    helper.push().setValue("null");
                     toast("Чат закреплён");
                 }
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                toast("System Error");
+            public void onCancelled(DatabaseError databaseError) {
+                // Ошибка при проверке, выводим сообщение
+                toast("Ошибка проверки на индивидуальность");
             }
         });
+
+//        parentRef.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                DataSnapshot childSnapshot = snapshot.child(userName);
+//                boolean exists = childSnapshot.exists();
+//
+//                DatabaseReference myRefPasswords = database.getReference("PinnedChats/" + userName);
+//                if (snapshot.hasChild(userName)) {
+//                    // Если подкаталога нет - создаем и записываем значение
+//                    toast("Чат уже закреплён");
+//                } else {
+//                    myRefPasswords.push().setValue(chatName);
+//                    toast("Чат закреплён");
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//                toast("System Error");
+//            }
+//        });
 
 
 
