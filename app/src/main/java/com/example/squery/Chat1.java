@@ -10,6 +10,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
+import android.icu.text.SimpleDateFormat;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -58,12 +59,14 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 import java.util.Objects;
 
 public class Chat1 extends AppCompatActivity {
 
     TextView chatname_title_of_chat, username_title_of_chat;
-    ConstraintLayout btnSendMess, bottomPanel, btn_show_sett, btn_add_to_my_chats_in_dial, btn_show_info_about_chat_in_dial, btn_clear_chat_in_dial;
+    ConstraintLayout btnSendMess, bottomPanel, btn_show_sett, btn_add_to_my_chats_in_dial, btn_show_info_about_chat_in_dial, btn_clear_chat_in_dial, btn_show_qr;
     EditText editTextMess;
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     Dialog dialogInfo;
@@ -71,7 +74,7 @@ public class Chat1 extends AppCompatActivity {
     RecyclerView mMessagesRecycler;
     public int keyboardHeight = 0;
 
-    ArrayList<String> messages = new ArrayList<>();
+    ArrayList<MessageData> messages = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,7 +123,6 @@ public class Chat1 extends AppCompatActivity {
         });
 
 
-
         String username = getIntent().getStringExtra("Username_to_chat");
 
         username_title_of_chat.setText(username);
@@ -138,13 +140,15 @@ public class Chat1 extends AppCompatActivity {
 
         mMessagesRecycler.setAdapter(dataAdapter);
 
+        String currentTime = new SimpleDateFormat("HH:mm", Locale.getDefault()).format(new Date());
+
         btnSendMess.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (!editTextMess.getText().toString().trim().isEmpty()) {
                     if (editTextMess.getText().toString().length() <= 500) {
                         //ВАЖНО: Замените  myRef на ваше подключение к базе данных.
-                        myRef.push().setValue(username + ":  " + editTextMess.getText().toString()); //Используйте myRef, а не firebaseInstance.
+                        myRef.push().setValue(username + "("+currentTime+"):" + editTextMess.getText().toString()); //Используйте myRef, а не firebaseInstance.
                         editTextMess.setText("");
 //                        hideKeyboard();
                     }
@@ -162,14 +166,13 @@ public class Chat1 extends AppCompatActivity {
         rootView.getViewTreeObserver().addOnGlobalLayoutListener(layoutListener);
 
 
-
         myRef.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
 
                 String mag = snapshot.getValue(String.class);
 
-                messages.add(mag);
+                messages.add(new MessageData(mag, ""));
 
                 dataAdapter.notifyDataSetChanged();
                 mMessagesRecycler.smoothScrollToPosition(messages.size());
@@ -194,6 +197,22 @@ public class Chat1 extends AppCompatActivity {
 
             }
         });
+
+
+
+        btn_add_to_my_chats_in_dial = findViewById(R.id.btn_add_to_my_chats_in_dial);
+
+        btn_add_to_my_chats_in_dial.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                saveChat(chatname, username_title_of_chat.getText().toString());
+                dialogInfo.cancel();
+            }
+        });
+
+
+
+
 
     }
 
@@ -284,15 +303,14 @@ public class Chat1 extends AppCompatActivity {
 
         dialogInfo.show();
 
-        btn_add_to_my_chats_in_dial = dialogInfo.findViewById(R.id.btn_add_to_my_chats_in_dial);
         btn_show_info_about_chat_in_dial = dialogInfo.findViewById(R.id.btn_show_info_about_chat_in_dial);
         btn_clear_chat_in_dial = dialogInfo.findViewById(R.id.btn_clear_chat_in_dial);
+        btn_show_qr = dialogInfo.findViewById(R.id.btn_show_qr);
 
-        btn_add_to_my_chats_in_dial.setOnClickListener(new View.OnClickListener() {
+        btn_show_qr.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                saveChat(chatname, username);
-                dialogInfo.cancel();
+                toast("Работаем над этим...");
             }
         });
 
@@ -333,7 +351,9 @@ public class Chat1 extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.hasChild(chatName)) {
-                    toast("Чат уже закреплён");
+                    DatabaseReference helper2 = database.getReference("PinnedChats/" + userName + "/" + chatName);
+                    helper2.removeValue();
+                    toast("Чат откреплён");
                 } else {
                     DatabaseReference helper = database.getReference("PinnedChats/" + userName + "/" + chatName);
                     helper.push().setValue("null");
