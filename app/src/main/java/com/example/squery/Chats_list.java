@@ -1,17 +1,11 @@
 package com.example.squery;
 
-import static androidx.core.content.ContextCompat.startActivity;
-import static com.example.squery.SQLiteDataAdapter.chatItems;
-
 import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.opengl.GLDebugHelper;
 import android.os.Bundle;
 import android.os.SystemClock;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
@@ -27,8 +21,6 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -37,20 +29,26 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
+
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.os.Build;
+import android.os.Bundle;
+import android.widget.Toast;
+import androidx.activity.result.ActivityResultLauncher;
+
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 public class Chats_list extends AppCompatActivity {
 
     RecyclerView recycler_view_in_chats_list, recyclerViewMyChats;
-//    DBHelper dbHelper;
-    SQLiteDataAdapter sqLiteDataAdapter;
     TextView username_title_of_chats_list, titleWelcomeChat;
-    ConstraintLayout btn_add_chat, btn_create_chat, btn_welcome_chat, btn_delete_chat, btn_find_chat_in_wind, btn_my_chats;
+    ConstraintLayout btn_add_chat, btn_create_chat,btn_find_chat, btn_welcome_chat, btn_del_chat_in_pin, btn_unpin_chat_in_pin, btn_letsGo_to_chat_in_pin, btn_delete_chat, btn_find_chat_in_wind, btn_my_chats;
     EditText editTextChatName, editTextChatPass, editTextCheckPass, searchEditText;
     DataAdapterChats dataAdapter;
 
@@ -71,19 +69,56 @@ public class Chats_list extends AppCompatActivity {
 
     ArrayList<String> chats = new ArrayList<>();
 
+    List<ChatItem> chatItems1 = new ArrayList<>();
+
+
 //    ArrayList<ChatItem> MyChats = new ArrayList<>();
 
 
     DatabaseReference myRefChats = database.getReference("Chats");
     DatabaseReference mySavedChatsRef = database.getReference("PinnedChats");
 
-    public Dialog createChat, welcomeChat, findChat, myChatsDial;
+    private ActivityResultLauncher<String> requestPermissionLauncher;
+
+    public Dialog createChat, welcomeChat, findChat, myChatsDial, edit_pin_chat;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_chats_list);
+
+
+
+
+
+        //                                  MESSAGE
+
+        requestPermissionLauncher = registerForActivityResult(
+                new ActivityResultContracts.RequestPermission(),
+                isGranted -> {
+                    if (isGranted) {
+                        Toast.makeText(this, "Разрешение на уведомления получено", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(this, "Разрешение на уведомления отклонено", Toast.LENGTH_SHORT).show();
+                    }
+                }
+        );
+
+        // Запрос разрешения, если это необходимо
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
+                    != PackageManager.PERMISSION_GRANTED) {
+                requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
+            }
+        }
+
+
+
+
+
+
+
 
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
@@ -97,30 +132,110 @@ public class Chats_list extends AppCompatActivity {
         findChat = new Dialog(Chats_list.this);
         createChat = new Dialog(Chats_list.this);
         myChatsDial = new Dialog(Chats_list.this);
+        edit_pin_chat = new Dialog(Chats_list.this);
 
         btn_add_chat = findViewById(R.id.btn_add_chat);
-        username_title_of_chats_list = findViewById(R.id.username_title_of_chats_list);
-        recycler_view_in_chats_list = findViewById(R.id.recycler_view_in_chats_list);
-
-        btn_my_chats = findViewById(R.id.btn_my_chats);
-
-        btn_my_chats.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                method_my_chats_from_btn(username_title_of_chats_list.getText().toString());
-            }
-        });
-
-        chats = getChatTitles();
-
-        dataAdapter = new DataAdapterChats(this, chats);
-
-        recycler_view_in_chats_list.setLayoutManager(new LinearLayoutManager(this));
-        recycler_view_in_chats_list.setAdapter(dataAdapter);
+        btn_find_chat = findViewById(R.id.btn_find_chat);
 
         String Username = getIntent().getStringExtra("Username");
 
-        username_title_of_chats_list.setText(Username);
+        btn_find_chat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                method_find_chat(getIntent().getStringExtra("Username"));
+
+            }
+        });
+
+        username_title_of_chats_list = findViewById(R.id.username_title_of_chats_list);
+
+        username_title_of_chats_list.setText(getIntent().getStringExtra("Username"));
+
+
+
+
+
+
+
+
+
+        //                                  FIX CHATS
+
+
+        recyclerViewMyChats = findViewById(R.id.recyclerViewMyChats);
+
+        DatabaseReference myRefMyChats = database.getReference("PinnedChats/" + getIntent().getStringExtra("Username"));
+
+        ChatItemAdapter adapter = new ChatItemAdapter(chatItems1);
+
+        recyclerViewMyChats.setLayoutManager(new LinearLayoutManager(this));
+        recyclerViewMyChats.setAdapter(adapter);
+
+        myRefMyChats.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                chatItems1.clear();
+                for (DataSnapshot chatSnapshot : snapshot.getChildren()) {
+                    String chatName = chatSnapshot.getKey();
+                    if (chatName != null) {
+                        ChatItem chatItem2 = new ChatItem(chatName);
+                        chatItems1.add(chatItem2);
+                    }
+                }
+                adapter.setChatItems(chatItems1);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        if(!isMyChatsInitialized){
+
+            recyclerViewMyChats.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
+                @Override
+                public boolean onInterceptTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
+                    View childView = rv.findChildViewUnder(e.getX(), e.getY());
+                    if (childView != null) {
+                        int positionOfMyChats = rv.getChildAdapterPosition(childView);
+                        long currentTime = SystemClock.elapsedRealtime();
+                        ChatItem item = adapter.getItemAdapter(positionOfMyChats);
+
+                        if (e.getActionMasked() == MotionEvent.ACTION_UP) {
+                            if (positionOfMyChats == lastClickPosition && currentTime - lastClickTime <= DOUBLE_CLICK_INTERVAL) {
+                                if (item != null) {
+                                    LetsChatOfPin(item.getChatName(), getIntent().getStringExtra("Username"));
+
+                                    lastClickTime = 0;
+                                    lastClickPosition = -1;
+                                    return false;
+                                } else {
+                                    Toast.makeText(Chats_list.this, "Не удалось войти в чат", Toast.LENGTH_SHORT).show();
+                                }
+                            } else {
+                                lastClickTime = currentTime;
+                                lastClickPosition = positionOfMyChats;
+                                toast("Нажимте ещё раз что бы зайти в чат");
+                            }
+                            return false;
+                        }
+                    }
+                    return false;
+                }
+
+                @Override
+                public void onTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {}
+                @Override
+                public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {}
+            });
+            isMyChatsInitialized = true;
+        }
+
+
+
+
+
+
 
 
         btn_add_chat.setOnClickListener(new View.OnClickListener() {
@@ -130,60 +245,6 @@ public class Chats_list extends AppCompatActivity {
             }
         });
 
-
-
-        //                                                                  TOUCH EVENT
-
-
-
-        recycler_view_in_chats_list.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
-
-            @Override
-            public void onTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
-            }
-
-            @Override
-            public boolean onInterceptTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
-                View childView = recycler_view_in_chats_list.findChildViewUnder(e.getX(), e.getY());
-                if (childView != null) {
-
-                    int position = recycler_view_in_chats_list.getChildAdapterPosition(childView);
-                    int itemIndex = DataAdapterChats.getItemIndexFind(position);
-//                    long currentTimeFindChats = SystemClock.elapsedRealtime();
-
-//                    if (e.getActionMasked() == MotionEvent.ACTION_UP) { // Добавлена проверка на ACTION_UP
-//                        if (position == lastClickPositionFind && currentTimeFindChats - lastClickTimeFind <= DOUBLE_CLICK_INTERVAL_FOR_FIND) {
-//                            if (itemIndex != 0) {
-                    LetsChat(String.valueOf(dataAdapter.filteredChats.get(itemIndex)), myRefChats, Username, mySavedChatsRef);
-//                                lastClickTimeFind = 0;
-//                                lastClickPositionFind = -1;
-//                                toast("вошёл");
-//                                return false;
-//                            } else {
-//                                Toast.makeText(Chats_list.this, "Не удалось войти в чат", Toast.LENGTH_SHORT).show();
-//                            }
-//                        } else {
-//                            lastClickTimeFind = currentTimeFindChats;
-//                            lastClickPositionFind = itemIndex;
-//                            toast("Нажимте ещё раз что бы зайти в чат");
-//                        }
-//                        return false;
-                }
-
-//                    Toast.makeText(Chats_list.this, String.valueOf(dataAdapter.chats.get(itemIndex)), Toast.LENGTH_SHORT).show();
-//                }
-//                return false;
-                return false;
-            }
-
-            @Override
-            public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
-
-            }
-
-
-        });
-        isMyChatsInitializedFind = true;
     }
 
 
@@ -199,6 +260,22 @@ public class Chats_list extends AppCompatActivity {
     /*-----------------------------------*/
     /*--------------METHODS--------------*/
     /*-----------------------------------*/
+
+
+
+
+
+
+
+
+    //                                      SENDING MESSAGING
+
+
+    private void sendMessFirstChat() {
+        NotificationHelper notificationHelper = new NotificationHelper(this);
+        notificationHelper.sendNotification("Squery", "Новое сообщение");
+    }
+
 
 
 
@@ -237,7 +314,49 @@ public class Chats_list extends AppCompatActivity {
 
 
     public void LetsChatOfPin(String chatname, String username){
-        intent(chatname, username);
+
+        edit_pin_chat.setContentView(R.layout.activity_edit_chat_for_my_chats);
+        edit_pin_chat.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        edit_pin_chat.show();
+
+        btn_del_chat_in_pin = edit_pin_chat.findViewById(R.id.btn_del_chat_in_pin);
+        btn_letsGo_to_chat_in_pin = edit_pin_chat.findViewById(R.id.btn_letsGo_to_chat_in_pin);
+        btn_unpin_chat_in_pin = edit_pin_chat.findViewById(R.id.btn_unpin_chat_in_pin);
+
+        btn_letsGo_to_chat_in_pin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                intent(chatname, username);
+            }
+        });
+
+        btn_del_chat_in_pin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                FirebasePasswordRemover removerPass = new FirebasePasswordRemover();
+                removerPass.deletePasswordChat(chatname);
+
+                deleteChat(myRefChats, mySavedChatsRef, chatname, getIntent().getStringExtra("Username"));
+
+                edit_pin_chat.cancel();
+
+                recreate();
+
+            }
+        });
+
+        DatabaseReference unPinChatRef = database.getReference("PinnedChats").child(getIntent().getStringExtra("Username")).child(chatname);
+
+        btn_unpin_chat_in_pin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                unPinChatRef.removeValue();
+
+            }
+        });
     }
 
 
@@ -268,29 +387,16 @@ public class Chats_list extends AppCompatActivity {
 
         final String[] retPass = new String[1];
 
-        // Получаем ссылку на базу данных Firebase
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
-
-//        // Ссылка на подкаталог Chat в каталоге Passwords
-
         DatabaseReference passRef = databaseReference.child("Passwords").child(titleWelcomeChat.getText().toString());
 
-//        // Добавляем слушатель для чтения данных
         passRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                // Проверяем, существует ли элемент
                 if (dataSnapshot.exists()) {
-
-                    // Проходим по всем дочерним элементам
                     for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
-                        // Получаем ключ элемента
                         String key = childSnapshot.getKey();
-
-                        // Получаем значение элемента
                         String chatData = childSnapshot.getValue(String.class);
-
-                        // Обработка данных
 
                         assert key != null;
 
@@ -298,20 +404,9 @@ public class Chats_list extends AppCompatActivity {
 
                         retPass[0] = chatDataPass;
 
-                        // Используйте chatData и key в вашем приложении
                     }
 
-                    //                    String key = childSnapshot.getKey();
-                    //
-                    //                    String chatData = dataSnapshot.child("-O9zPtyfbIRC8muiu86h").getValue(String.class);
-                    //                    // Обработка данных
-
-                    //                    Toast.makeText(Chats_list.this, chatData, Toast.LENGTH_SHORT).show();
-
-                    //                    // Используйте chatData в вашем приложении
-
                 } else {
-                    // Если элемент не найден
                     Toast.makeText(Chats_list.this, "Data bot found", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -328,12 +423,9 @@ public class Chats_list extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (editTextCheckPass.getText().toString().equals(retPass[0].toString())){
-//                    Toast.makeText(Chats_list.this, "Correct Pass: "+retPass[0], Toast.LENGTH_SHORT).show();
-
                     welcomeChatBeforeCheck(chatname, username_title_of_chats_list_from_chat, editTextCheckPass.getText().toString());
                 } else {
-//                    Toast.makeText(Chats_list.this, "Incorrect Pass" + retPass[0], Toast.LENGTH_SHORT).show();
-//                    Toast.makeText(Chats_list.this, "Incorrect password", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Chats_list.this, "Неверный пароль", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -342,23 +434,21 @@ public class Chats_list extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
+                if (editTextCheckPass.getText().toString().equals(retPass[0].toString())){
 
+                    FirebasePasswordRemover removerPass = new FirebasePasswordRemover();
+                    removerPass.deletePasswordChat(chatname);
 
-                // Удаляем элемент с ключом
-//                database.getReference("ChatsWithMess").child(titleWelcomeChat.toString()).removeValue();
+                    deleteChat(myRefChats, mySavedChatsRef, chatname, getIntent().getStringExtra("Username"));
 
-                FirebaseChatRemover removerChatMess = new FirebaseChatRemover();
-                removerChatMess.deleteChat(chatname);
+                    welcomeChat.cancel();
+                    findChat.cancel();
 
-                FirebasePasswordRemover removerPass = new FirebasePasswordRemover();
-                removerPass.deletePasswordChat(chatname);
+                    recreate();
 
-                deleteChat(myRefChats, mySavedChatsRef, chatname, username_title_of_chats_list_from_chat);
-
-//                Objects.requireNonNull(myRefChats.child(titleWelcomeChat.toString()).getKey())
-
-                welcomeChat.cancel();
-                recreate();
+                } else {
+                    Toast.makeText(Chats_list.this, "Неверный пароль", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -366,61 +456,8 @@ public class Chats_list extends AppCompatActivity {
 
 
     public void deleteChat(DatabaseReference chatsRef, DatabaseReference MySavedChatRef, String targetValue, String username){
-//        DBHelper dbHelper = new DBHelper(this);
 
-
-        MySavedChatRef.child(username).removeValue();
-
-
-//        MySavedChatsRef.child(key).removeValue(new DatabaseReference.CompletionListener() {
-//            @Override
-//            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-//                if (databaseError == null) {
-//                    System.out.println("Data with key '" + key + "' successfully deleted");
-//                } else {
-//                    System.err.println("Error deleting data: " + databaseError.getMessage());
-//                }
-//            }
-//        });
-
-//        Query querySaved = MySavedChatRef.orderByValue().equalTo(username);
-//        querySaved.addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                if (dataSnapshot.exists()) {
-//                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-//                        String key = snapshot.getKey();
-//
-//                        // Правильный код с использованием CompletionListener
-//                        MySavedChatRef.child(username).removeValue(new DatabaseReference.CompletionListener() {
-//                            @Override
-//                            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-//                                if (databaseError == null) {
-//                                    System.out.println("Data with key '" + key + "' successfully deleted");
-//                                } else {
-//                                    System.err.println("Error deleting data: " + databaseError.getMessage());
-//                                }
-//                            }
-//                        });
-//
-////                        dbHelper.deleteChatByName(chatName);
-//
-//                    }
-//                } else {
-//                    System.out.println("No data found with the value: " + targetValue);
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//                System.err.println("Query cancelled: " + databaseError.getMessage());
-//            }
-//        });
-
-
-
-
-
+        MySavedChatRef.child(username).child(targetValue).removeValue();
 
         Query query = chatsRef.orderByValue().equalTo(targetValue);
         query.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -477,11 +514,49 @@ public class Chats_list extends AppCompatActivity {
 
 
 
-    public void method_find_chat(View view){
+    public void method_find_chat(String Username){
         findChat.setContentView(R.layout.activity_dialog_find_chat);
         findChat.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
         findChat.show();
+
+        recycler_view_in_chats_list = findChat.findViewById(R.id.recycler_view_in_chats_list);
+
+        chats = getChatTitles();
+
+        dataAdapter = new DataAdapterChats(this, chats);
+
+        recycler_view_in_chats_list.setLayoutManager(new LinearLayoutManager(this));
+        recycler_view_in_chats_list.setAdapter(dataAdapter);
+
+
+        recycler_view_in_chats_list.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
+
+            @Override
+            public void onTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
+            }
+
+            @Override
+            public boolean onInterceptTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
+                View childView = recycler_view_in_chats_list.findChildViewUnder(e.getX(), e.getY());
+                if (childView != null) {
+
+                    int position = recycler_view_in_chats_list.getChildAdapterPosition(childView);
+                    int itemIndex = DataAdapterChats.getItemIndexFind(position);
+
+                    LetsChat(String.valueOf(dataAdapter.filteredChats.get(itemIndex)), myRefChats, Username, mySavedChatsRef);
+
+                    findChat.cancel();
+                }
+                return false;
+            }
+            @Override
+            public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
+
+            }
+
+
+        });
 
         searchEditText = findChat.findViewById(R.id.searchEditText);
         btn_find_chat_in_wind = findChat.findViewById(R.id.find_in_wind);
@@ -489,8 +564,7 @@ public class Chats_list extends AppCompatActivity {
         btn_find_chat_in_wind.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                handleSearchAndDismiss();
-                findChat.dismiss();
+                handleSearchAndDismiss(searchEditText);
             }
         });
     }
@@ -498,8 +572,8 @@ public class Chats_list extends AppCompatActivity {
 
 
 
-    private void handleSearchAndDismiss() {
-        String searchText = searchEditText.getText().toString();
+    private void handleSearchAndDismiss(EditText searchEditTextp2) {
+        String searchText = searchEditTextp2.getText().toString();
         filterAndUpdateRecyclerView(searchText);
     }
 
@@ -511,11 +585,7 @@ public class Chats_list extends AppCompatActivity {
                 filteredList.add(chat);
             }
         }
-        if (filteredList.size() == 1) {
-            dataAdapter.updateList(filteredList);
-        } else {
-            toast("Чат не найден");
-        }
+        dataAdapter.updateList(filteredList);
     }
 
 
@@ -659,243 +729,7 @@ public class Chats_list extends AppCompatActivity {
 
     public void method_my_chats_from_btn(String username){
 
-//        toast(username);
-
-        myChatsDial.setContentView(R.layout.activity_my_chats);
-        myChatsDial.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-
-        List<ChatItem> chatItems1 = new ArrayList<>();
-
-        DatabaseReference myRefMyChats = database.getReference("PinnedChats/" + username);
-
-        ChatItemAdapter adapter = new ChatItemAdapter(chatItems1);
-
-        recyclerViewMyChats = myChatsDial.findViewById(R.id.recyclerViewMyChats);
-
-        recyclerViewMyChats.setLayoutManager(new LinearLayoutManager(this));
-        recyclerViewMyChats.setAdapter(adapter);
-
-        myRefMyChats.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                chatItems1.clear();
-                for (DataSnapshot chatSnapshot : snapshot.getChildren()) {
-                    // Получаем имя каталога (ключа)
-                    String chatName = chatSnapshot.getKey();
-                    if (chatName != null) {
-                        ChatItem chatItem2 = new ChatItem(chatName); // Создаём объект с id и значением
-                        chatItems1.add(chatItem2);
-//                        Log.d("FirebaseData", "Chat added: " + chatName);
-                    } else {
-//                        Log.e("FirebaseData", "Failed to get Chat key from snapshot: " + chatSnapshot.toString());
-                    }
-                }
-                adapter.setChatItems(chatItems1);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-//                Log.e("FirebaseData", "Error loading data: " + error.getMessage());
-            }
-        });
-
-
-
-//        myRefMyChats.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                chatItems1.clear();
-//                for (DataSnapshot chatSnapshot : snapshot.getChildren()) {
-//                    String chatName = chatSnapshot.getValue(String.class); // Получаем значение как String
-//                    if(chatName != null){
-//                        ChatItem chatItem2 = new ChatItem(chatName); // Создаём объект с id и значением
-//                        chatItems1.add(chatItem2);
-//                    }
-//
-//
-//                }
-//                adapter.setChatItems(chatItems1);
-//            }
-//
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//                // Обработка ошибки
-//            }
-//        });
-
-
-        if(!isMyChatsInitialized){
-
-            String Username = getIntent().getStringExtra("Username");
-
-            recyclerViewMyChats.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
-                @Override
-                public boolean onInterceptTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
-                    View childView = rv.findChildViewUnder(e.getX(), e.getY());
-                    if (childView != null) {
-                        int positionOfMyChats = rv.getChildAdapterPosition(childView);
-                        long currentTime = SystemClock.elapsedRealtime();
-                        ChatItem item = adapter.getItemAdapter(positionOfMyChats);
-
-                        if (e.getActionMasked() == MotionEvent.ACTION_UP) {
-                            if (positionOfMyChats == lastClickPosition && currentTime - lastClickTime <= DOUBLE_CLICK_INTERVAL) {
-                                if (item != null) {
-                                    LetsChatOfPin(item.getChatName(), Username);
-                                    lastClickTime = 0;
-                                    lastClickPosition = -1;
-                                    return false;
-                                } else {
-                                    Toast.makeText(Chats_list.this, "Не удалось войти в чат", Toast.LENGTH_SHORT).show();
-                                }
-                            } else {
-                                lastClickTime = currentTime;
-                                lastClickPosition = positionOfMyChats;
-                                toast("Нажимте ещё раз что бы зайти в чат");
-                            }
-                            return false;
-                        }
-                    }
-                    return false;
-                }
-
-                @Override
-                public void onTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {}
-                @Override
-                public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {}
-            });
-            isMyChatsInitialized = true;
-        }
-        myChatsDial.show();
     }
-
-
-//        myChats.setContentView(R.layout.activity_my_chats);
-//        myChats.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-//
-//
-//        if(!isMyChatsInitialized){
-//            recyclerViewMyChats = myChats.findViewById(R.id.recyclerViewMyChats);
-//            dbHelper = new DBHelper(this);
-//
-//
-//
-//            // Получаем данные из базы данных
-//            List<ChatItem> chatItems = dbHelper.getAllChats();
-//
-//            // Создаем адаптер
-//            sqLiteDataAdapter = new SQLiteDataAdapter(this, chatItems);
-//
-//            // Настраиваем RecyclerView
-//            recyclerViewMyChats.setLayoutManager(new LinearLayoutManager(this));
-//            recyclerViewMyChats.setAdapter(sqLiteDataAdapter);
-//
-//            String Username = getIntent().getStringExtra("Username");
-//
-//            recyclerViewMyChats.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
-//                @Override
-//                public boolean onInterceptTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
-//                    View childView = rv.findChildViewUnder(e.getX(), e.getY());
-//                    if (childView != null) {
-//                        int positionOfMyChats = rv.getChildAdapterPosition(childView);
-//                        long currentTime = SystemClock.elapsedRealtime();
-//                        ChatItem item = sqLiteDataAdapter.getItem(positionOfMyChats);
-//
-//                        if (e.getActionMasked() == MotionEvent.ACTION_UP) { // Добавлена проверка на ACTION_UP
-//                            if (positionOfMyChats == lastClickPosition && currentTime - lastClickTime <= DOUBLE_CLICK_INTERVAL) {
-//                                if (item != null) {
-//                                    LetsChatOfPin(item.getChatName(), Username);
-//                                    lastClickTime = 0;
-//                                    lastClickPosition = -1;
-//                                    return false;
-//                                } else {
-//                                    Toast.makeText(Chats_list.this, "Не удалось войти в чат", Toast.LENGTH_SHORT).show();
-//                                }
-//                            } else {
-//                                lastClickTime = currentTime;
-//                                lastClickPosition = positionOfMyChats;
-//                                toast("Нажмите ещё раз что бы зайти в чат");
-//                            }
-//                            return false;
-//                        }
-//                    }
-//                    return false;
-//                }
-//                @Override
-//                public void onTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {}
-//                @Override
-//                public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {}
-//            });
-//
-//            isMyChatsInitialized = true;
-//        }
-//
-//        myChats.show();
-
-
-//
-//        recyclerViewMyChats = myChats.findViewById(R.id.recyclerViewMyChats);
-//
-//        dbHelper = new DBHelper(this);
-//
-//            // Получаем данные из базы данных
-//        List<ChatItem> chatItems = dbHelper.getAllChats();
-//
-//            // Создаем адаптер
-//        sqLiteDataAdapter = new SQLiteDataAdapter(this, chatItems);
-//
-//            // Настраиваем RecyclerView
-//        recyclerViewMyChats.setLayoutManager(new LinearLayoutManager(this));
-//        recyclerViewMyChats.setAdapter(sqLiteDataAdapter);
-
-//        String Username = getIntent().getStringExtra("Username");
-//
-//            recyclerViewMyChats.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
-//
-//                @Override
-//                public void onTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
-//                }
-//
-//                @Override
-//                public boolean onInterceptTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
-//
-//                    View childView = rv.findChildViewUnder(e.getX(), e.getY());
-//                    if (childView != null) {
-//                        int positionOfMyChats = rv.getChildAdapterPosition(childView);
-//                        long currentTime = SystemClock.elapsedRealtime();
-//                        ChatItem item = sqLiteDataAdapter.getItem(positionOfMyChats);
-//
-//                        if (positionOfMyChats == lastClickPosition && currentTime - lastClickTime <= DOUBLE_CLICK_INTERVAL) {
-//
-//                            if (item != null) {
-//                                LetsChatOfPin(item.getChatName(), Username);
-//                                lastClickTime = 0;
-//                                lastClickPosition = -1;
-//                                toast("chatComp");
-//                                return false;
-//                            } else {
-//                                Toast.makeText(Chats_list.this, "Нажмите ещё раз что бы войти в чат", Toast.LENGTH_SHORT).show();
-//                            }
-//
-//                        } else {
-//                            lastClickTime = currentTime;
-//                            lastClickPosition = positionOfMyChats;
-//                            toast("Какая то ошибка всего");
-//                        }
-//
-//                        return false;
-//                    }
-//                    return false;
-//
-//                }
-//
-//                @Override
-//                public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
-//
-//                }
-//            });
-
-
 
 
     public void intent(String chatName, String Username){
@@ -913,14 +747,4 @@ public class Chats_list extends AppCompatActivity {
         Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
     }
 
-
-
-
-//    @Override
-//    public void onBackPressed() {
-//
-//        toast("Нажмите ещё раз что бы выйти из аккаунта");
-//
-//        super.onBackPressed();
-//    }
 }

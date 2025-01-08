@@ -76,6 +76,13 @@ public class Chat1 extends AppCompatActivity {
 
     ArrayList<MessageData> messages = new ArrayList<>();
 
+
+    FirebaseChatManager chatManager;
+
+    public static boolean isChatActivityActive = false;
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,6 +90,8 @@ public class Chat1 extends AppCompatActivity {
 
         chatname_title_of_chat = findViewById(R.id.chatname_title_of_chat);
         username_title_of_chat = findViewById(R.id.username_title_of_chat);
+
+
 
         btn_show_sett = findViewById(R.id.btn_show_sett);
 
@@ -96,6 +105,11 @@ public class Chat1 extends AppCompatActivity {
 
         String chatpass = getIntent().getStringExtra("Chatpass");
         String chatname = getIntent().getStringExtra("Chatname");
+
+        chatManager = new FirebaseChatManager(this, chatname);
+        getLifecycle().addObserver(chatManager);
+
+        chatManager.startListeningForNewMessages(this, chatname);
 
         final String[] chatPass = {""};
 
@@ -433,11 +447,18 @@ public class Chat1 extends AppCompatActivity {
         super.onBackPressed();
 
         String username = getIntent().getStringExtra("Username_to_chat");
+        String chatname = getIntent().getStringExtra("Chatname");
 
         Intent intent1 = new Intent(this, Chats_list.class);
         intent1.putExtra("Username", username);
         startActivity(intent1);
         finish();
+
+        isChatActivityActive = false;
+
+
+        FirebaseChatManager chatManager = new FirebaseChatManager(Chat1.this, chatname);
+        chatManager.stopListeningForNewMessages();
     }
 
     public void toast(String text){

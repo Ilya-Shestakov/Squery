@@ -81,11 +81,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void sendMessFirstChat() {
-        NotificationHelper notificationHelper = new NotificationHelper(this);
-        notificationHelper.sendNotification("New message", "Новое сообщение");
-    }
-
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {

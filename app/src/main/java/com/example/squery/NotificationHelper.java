@@ -18,6 +18,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 
+
+
 //                                                          ОТПРАВКА УВЕДОМЛЕНИЙ
 
 
@@ -49,7 +51,7 @@ public class NotificationHelper{
 
         // Build the notification.
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
-                .setSmallIcon(R.drawable.papageysmall) // Замените на свой иконку уведомления
+                .setSmallIcon(R.drawable.squeryv2) // Замените на свой иконку уведомления
                 .setContentTitle(title)
                 .setContentText(message)
                 .setContentIntent(pendingIntent)

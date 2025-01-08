@@ -21,48 +21,4 @@
         android:rotation="45"
         />
 
-<!--    <ScrollView-->
-<!--        android:id="@+id/scrollMyChats"-->
-
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="0dp"-->
-
-<!--        android:scrollbars="vertical"-->
-<!--        android:fadeScrollbars="false"-->
-<!--        android:scrollbarSize="7dp"-->
-<!--        android:scrollbarThumbVertical="@drawable/scroll_bar"-->
-<!--        android:scrollbarStyle="insideOverlay"-->
-<!--        tools:ignore="MissingConstraints"-->
-
-<!--        app:layout_constraintTop_toTopOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        >-->
-
-<!--        <androidx.recyclerview.widget.RecyclerView-->
-<!--            android:id="@+id/recyclerViewMyChats"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_marginTop="10dp"-->
-<!--            android:layout_marginEnd="10dp"-->
-<!--            />-->
-
-<!--    </ScrollView>-->
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerViewMyChats"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:fadeScrollbars="false"
-        android:scrollbarSize="7dp"
-        android:scrollbarThumbVertical="@drawable/scroll_bar"
-        android:scrollbarStyle="insideOverlay"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginTop="50dp"
-        />
-
 </androidx.constraintlayout.widget.ConstraintLayout>

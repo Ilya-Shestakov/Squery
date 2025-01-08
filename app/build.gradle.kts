@@ -38,6 +38,9 @@ dependencies {
     implementation ("com.google.firebase:firebase-database:9.0.0")
     implementation ("com.google.gms:google-services:3.0.0")
 
+    implementation ("com.google.firebase:firebase-messaging:23.4.0")
+
+
     implementation(platform(libs.firebase.bom))
     implementation(libs.appcompat)
     implementation(libs.material)

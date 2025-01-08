@@ -4,10 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="300dp"
-    android:layout_height="100dp"
+    android:layout_height="wrap_content"
     android:background="@drawable/btn_from_reg_and_log"
+    android:elevation="20dp"
     android:layout_gravity="center"
-    android:elevation="15dp"
     tools:context=".dialog_find_chat">
 
     <EditText
@@ -35,10 +35,10 @@
         android:layout_width="40dp"
         android:layout_height="40dp"
 
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/searchEditText"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginEnd="20dp"
-        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp"
         >
 
         <ImageView
@@ -46,8 +46,18 @@
             android:layout_height="40dp"
 
             android:src="@drawable/baseline_search_24"
-            />
+            tools:ignore="MissingConstraints" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view_in_chats_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="5dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/find_in_wind"
+        android:paddingBottom="5dp"
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

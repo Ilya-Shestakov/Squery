@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
 
     <application
         android:allowBackup="true"
@@ -17,10 +18,10 @@
         android:theme="@style/Theme.Squery"
         tools:targetApi="31">
         <activity
-            android:name=".chatInfo"
+            android:name=".EditChatForMyChats"
             android:exported="false" />
         <activity
-            android:name=".LetsChatOfPic"
+            android:name=".chatInfo"
             android:exported="false" />
         <activity
             android:name=".my_chats"
