@@ -66,7 +66,7 @@ import java.util.Objects;
 public class Chat1 extends AppCompatActivity {
 
     TextView chatname_title_of_chat, username_title_of_chat;
-    ConstraintLayout btnSendMess, bottomPanel, btn_show_sett, btn_add_to_my_chats_in_dial, btn_show_info_about_chat_in_dial, btn_clear_chat_in_dial, btn_show_qr;
+    ConstraintLayout btnSendMess, bottomPanel, btn_show_sett, btn_add_to_my_chats_in_dial, btn_show_info_about_chat_in_dial, btn_clear_chat_in_dial, btn_show_qr, main;
     EditText editTextMess;
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     Dialog dialogInfo;
@@ -77,7 +77,7 @@ public class Chat1 extends AppCompatActivity {
     ArrayList<MessageData> messages = new ArrayList<>();
 
 
-    FirebaseChatManager chatManager;
+    //FirebaseChatManager chatManager;
 
     public static boolean isChatActivityActive = false;
 
@@ -90,7 +90,7 @@ public class Chat1 extends AppCompatActivity {
 
         chatname_title_of_chat = findViewById(R.id.chatname_title_of_chat);
         username_title_of_chat = findViewById(R.id.username_title_of_chat);
-
+        main = findViewById(R.id.main);
 
 
         btn_show_sett = findViewById(R.id.btn_show_sett);
@@ -106,10 +106,15 @@ public class Chat1 extends AppCompatActivity {
         String chatpass = getIntent().getStringExtra("Chatpass");
         String chatname = getIntent().getStringExtra("Chatname");
 
-        chatManager = new FirebaseChatManager(this, chatname);
-        getLifecycle().addObserver(chatManager);
-
-        chatManager.startListeningForNewMessages(this, chatname);
+//        chatManager = new FirebaseChatManager(this, chatname);
+//        MyApplication application = (MyApplication) getApplication();
+//        if (application.isAppInForeground()){
+//
+//        }else{
+//            getLifecycle().addObserver(chatManager);
+//        }
+//
+//        chatManager.startListeningForNewMessages(this, chatname);
 
         final String[] chatPass = {""};
 
@@ -230,6 +235,10 @@ public class Chat1 extends AppCompatActivity {
 
     }
 
+
+    private boolean isActivityActive() {
+        return !isFinishing() && !isDestroyed();
+    }
 
 
     interface OnPasswordReceivedListener {
@@ -411,14 +420,6 @@ public class Chat1 extends AppCompatActivity {
 
     }
 
-    private void hideKeyboard() {
-        View view = this.getCurrentFocus();
-        if (view != null) {
-            InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-        }
-    }
-
     private void adjustRecyclerView() {
         Rect rect = new Rect();
         View rootView = findViewById(android.R.id.content);
@@ -457,8 +458,8 @@ public class Chat1 extends AppCompatActivity {
         isChatActivityActive = false;
 
 
-        FirebaseChatManager chatManager = new FirebaseChatManager(Chat1.this, chatname);
-        chatManager.stopListeningForNewMessages();
+//        FirebaseChatManager chatManager = new FirebaseChatManager(Chat1.this, chatname);
+//        chatManager.stopListeningForNewMessages();
     }
 
     public void toast(String text){

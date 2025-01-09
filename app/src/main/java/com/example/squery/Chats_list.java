@@ -94,6 +94,8 @@ public class Chats_list extends AppCompatActivity {
 
         //                                  MESSAGE
 
+
+
         requestPermissionLauncher = registerForActivityResult(
                 new ActivityResultContracts.RequestPermission(),
                 isGranted -> {
@@ -190,46 +192,30 @@ public class Chats_list extends AppCompatActivity {
             }
         });
 
-        if(!isMyChatsInitialized){
-
-            recyclerViewMyChats.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
-                @Override
-                public boolean onInterceptTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
-                    View childView = rv.findChildViewUnder(e.getX(), e.getY());
-                    if (childView != null) {
-                        int positionOfMyChats = rv.getChildAdapterPosition(childView);
-                        long currentTime = SystemClock.elapsedRealtime();
-                        ChatItem item = adapter.getItemAdapter(positionOfMyChats);
-
-                        if (e.getActionMasked() == MotionEvent.ACTION_UP) {
-                            if (positionOfMyChats == lastClickPosition && currentTime - lastClickTime <= DOUBLE_CLICK_INTERVAL) {
-                                if (item != null) {
-                                    LetsChatOfPin(item.getChatName(), getIntent().getStringExtra("Username"));
-
-                                    lastClickTime = 0;
-                                    lastClickPosition = -1;
-                                    return false;
-                                } else {
-                                    Toast.makeText(Chats_list.this, "Не удалось войти в чат", Toast.LENGTH_SHORT).show();
-                                }
-                            } else {
-                                lastClickTime = currentTime;
-                                lastClickPosition = positionOfMyChats;
-                                toast("Нажимте ещё раз что бы зайти в чат");
-                            }
-                            return false;
-                        }
-                    }
-                    return false;
+        recyclerViewMyChats.addOnItemTouchListener(new RecyclerItemClickListener(this, recyclerViewMyChats, new RecyclerItemClickListener.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                // Действия при простом нажатии
+                ChatItem item = adapter.getItemAdapter(position);
+                if (item != null) {
+                    intent(item.getChatName(), getIntent().getStringExtra("Username"));
+                } else {
+                    Toast.makeText(Chats_list.this, "Не удалось войти в чат", Toast.LENGTH_SHORT).show();
                 }
+            }
 
-                @Override
-                public void onTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {}
-                @Override
-                public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {}
-            });
-            isMyChatsInitialized = true;
-        }
+            @Override
+            public void onItemLongClick(View view, int position) {
+                // Действия при долгом нажатии
+                ChatItem item = adapter.getItemAdapter(position);
+                if (item != null) {
+                    LetsChatOfPin(item.getChatName(), getIntent().getStringExtra("Username"));
+                } else {
+                    Toast.makeText(Chats_list.this, "Не удалось войти в чат", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }));
+
 
 
 

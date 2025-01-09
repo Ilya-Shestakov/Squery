@@ -30,6 +30,7 @@ android {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
+
 }
 
 dependencies {
@@ -39,6 +40,7 @@ dependencies {
     implementation ("com.google.gms:google-services:3.0.0")
 
     implementation ("com.google.firebase:firebase-messaging:23.4.0")
+    implementation (libs.lifecycle.process.v261)
 
 
     implementation(platform(libs.firebase.bom))
@@ -51,6 +53,7 @@ dependencies {
     implementation(libs.firebase.auth)
     implementation(libs.firebase.database)
     implementation(libs.firebase.messaging)
+    implementation(libs.lifecycle.process)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
